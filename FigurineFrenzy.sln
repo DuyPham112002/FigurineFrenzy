@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FigurineFrenzy", "FigurineFrenzy\FigurineFrenzy.csproj", "{956AD11C-4291-4590-9351-11931E2332D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAccess", "DBAccess\DBAccess.csproj", "{70853E3E-1B1F-4F71-BF74-F26E0A3549EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{C5490822-61ED-4D20-8BD4-7E78841D373D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FigurineFrenzeyViewModel", "FigurineFrenzeyViewModel\FigurineFrenzeyViewModel.csproj", "{D2E7AEE5-7EA6-4483-BD43-6CC9284155C4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{956AD11C-4291-4590-9351-11931E2332D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{956AD11C-4291-4590-9351-11931E2332D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{956AD11C-4291-4590-9351-11931E2332D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{956AD11C-4291-4590-9351-11931E2332D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70853E3E-1B1F-4F71-BF74-F26E0A3549EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70853E3E-1B1F-4F71-BF74-F26E0A3549EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70853E3E-1B1F-4F71-BF74-F26E0A3549EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70853E3E-1B1F-4F71-BF74-F26E0A3549EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5490822-61ED-4D20-8BD4-7E78841D373D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5490822-61ED-4D20-8BD4-7E78841D373D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5490822-61ED-4D20-8BD4-7E78841D373D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5490822-61ED-4D20-8BD4-7E78841D373D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2E7AEE5-7EA6-4483-BD43-6CC9284155C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2E7AEE5-7EA6-4483-BD43-6CC9284155C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2E7AEE5-7EA6-4483-BD43-6CC9284155C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2E7AEE5-7EA6-4483-BD43-6CC9284155C4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
