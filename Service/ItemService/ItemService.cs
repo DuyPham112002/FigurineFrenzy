@@ -13,13 +13,16 @@ namespace Service.ItemService
     public interface IItemService
     {
         public Task<RESPONSECODE> CreateAsync(CreateItemViewModel item, string imageSetId);
+        public Task<List<GetinfoItemViewModel>> GetAllAsync(string AuctionId);
     }
     public class ItemService : IItemService
     {
         private readonly IUnitOfWork _uow;
-        public ItemService(IUnitOfWork uow)
+        private readonly FigurineFrenzyContext _context;
+        public ItemService(IUnitOfWork uow, FigurineFrenzyContext context)
         {
             _uow = uow;
+            _context = context;
         }
 
         public async Task<RESPONSECODE> CreateAsync(CreateItemViewModel item, string imageSetId)
@@ -44,7 +47,30 @@ namespace Service.ItemService
             }
             catch
             {
-                return RESPONSECODE.ERROR;
+                return RESPONSECODE.ERROR; 
+            }
+        }
+
+        public async Task<List<GetinfoItemViewModel>> GetAllAsync(string AuctionId)
+        {
+            try
+            {
+                var items = await _uow.Item.GetAllAsync(a => a.AuctionId == AuctionId);
+                if (items != null && items.Count > 0)
+                {
+                    return items.Select(a => new GetinfoItemViewModel
+                    {
+                        ItemId = a.ItemId,
+                        NameOfProduct = a.NameOfProduct,
+                        Description = a.Description,
+                        ImageSetId = a.ImageSetId
+                    }).ToList();
+                }
+                else return null;
+            }
+            catch
+            {
+                return null;
             }
         }
     }

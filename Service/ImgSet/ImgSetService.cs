@@ -12,6 +12,7 @@ namespace Service.ImgSet
     public interface IImgSetService
     {
         Task<RESPONSECODE> CreateAsync(string imgSetId);
+        Task<ImageSet> GetAsync(string imgSetId);
     }
     public class ImgSetService : IImgSetService
     {
@@ -39,6 +40,23 @@ namespace Service.ImgSet
             {
                 return RESPONSECODE.INTERNALERROR;
             }    
+        }
+
+        public async Task<ImageSet> GetAsync(string imgSetId)
+        {
+            try
+            {
+                var isExist = await _uow.ImageSet.GetFirstOrDefaultAsync(a=>a.Id == imgSetId);
+                if(isExist != null && isExist.IsActive == true)
+                {
+                    return isExist;
+                }
+                else return null;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

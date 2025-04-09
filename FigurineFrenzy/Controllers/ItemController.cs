@@ -100,7 +100,7 @@ namespace FigurineFrenzy.Controllers
                                 {
                                     image.CopyTo(stream);
                                 }
-                                string imageUrl = "Images/" + filename;
+                                string imageUrl = "Images/" + filename + ext;
                                 //save img metadata to db
                                 bool imageSaved = await _img.CreateImageBase(new ImageViewModel()
                                 {
@@ -135,7 +135,30 @@ namespace FigurineFrenzy.Controllers
             else return Unauthorized();
         }
 
+        [Authorize(Roles ="User,Admin")]
+        [HttpGet("GetAllByAuctionId")]
+        public async Task<IActionResult> GetAllByAuctionId(string auctionId)
+        {
+            string header = Request.Headers["Authorization"].ToString();
+            if (header != null && header.Length > 0)
+            {
+                string token = header.Split(" ")[1];
+                if (token != null)
+                {
+                    var checkToken = await _token.CheckTokenAsync(token);
+                    if (checkToken != null && checkToken.Role == "User" || checkToken.Role == "Admin")
+                    {
+                        List<GetinfoItemViewModel> item = await _item.GetAllAsync(auctionId);
+                        if (item != null && item.Count > 0)
+                        {
+                            return Ok(item);
+                        }
+                        else return StatusCode(400, "Can't Get List Item");
+                    }else return Unauthorized();
+                }else return Unauthorized();
+            }else return Unauthorized();
 
+        }
 
 
         [Authorize(Roles = "User")]

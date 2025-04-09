@@ -2,6 +2,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DBAccess.Entites;
 using DBAccess.UnitOfWork;
+using FigurineFrenzy.Background;
 using FigurineFrenzy.Controllers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Client;
@@ -9,7 +10,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.AccountService;
 using Service.AdminService;
+using Service.AuctionHubService;
 using Service.AuctionService;
+using Service.BidService;
 using Service.CategoryService;
 using Service.HashService;
 using Service.Img;
@@ -26,12 +29,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy => policy
-           .AllowAnyOrigin()
-           .AllowAnyHeader()
-           .AllowAnyMethod()
+           .WithOrigins("http://127.0.0.1:5500","http://localhost:5500")
+            .AllowAnyMethod()
+           .AllowAnyHeader().AllowCredentials()
+
           );
 });
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -71,6 +76,8 @@ builder.Services.AddSwaggerGen(c =>
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// Add SignalR
+
 
 //Add JWT 
 var key = Encoding.UTF8.GetBytes("Cuoasnnlqlql48820938!#*#**....a9/./01002099((**");
@@ -89,6 +96,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
+//add service run behind the scene
+builder.Services.AddHostedService<AuctionbackgroundService>();
+
 builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 {
     builder.RegisterType<UnitOfWork>().As<IUnitOfWork>();
@@ -96,7 +106,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
     builder.RegisterType<UserService>().As<IUserService>();
     builder.RegisterType<RoleService>().As<IRoleService>();
     builder.RegisterType<HashService>().As<IHashService>();
-    builder.RegisterType<FigurineFrenzyContext>().AsSelf(); 
+    builder.RegisterType<FigurineFrenzyContext>().AsSelf();
     builder.RegisterType<Validator>().As<IValidator>();
     builder.RegisterType<TokenService>().As<ITokenService>();
     builder.RegisterType<AdminService>().As<IAdminService>();
@@ -105,6 +115,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
     builder.RegisterType<ImgService>().As<IImgService>();
     builder.RegisterType<ImgSetService>().As<IImgSetService>();
     builder.RegisterType<AuctionService>().As<IAuctionService>();
+    builder.RegisterType<BidService>().As<IBidService>();
 });
 
 var app = builder.Build();
@@ -117,6 +128,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseCors();
+
 if (builder.Environment.IsDevelopment())
 {
     app.UseSwaggerUI(options => // UseSwaggerUI is called only in Development.
@@ -126,11 +138,15 @@ if (builder.Environment.IsDevelopment())
     });
 }
 
+
+app.MapHub<AuctionHubService>("/auctionHubService");
+
 app.MapStaticAssets();
 
 app.UseAuthentication();
 
 app.UseAuthorization();
+//app.UseStaticFiles();
 
 app.MapControllers();
 

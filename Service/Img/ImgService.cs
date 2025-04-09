@@ -12,6 +12,7 @@ namespace Service.Img
     public interface IImgService
     {
         Task<bool> CreateImageBase(ImageViewModel image);
+        Task <List<InfoImageViewModel>> GetAllAsync(string imageSetId);
     }
     public class ImgService : IImgService
     {
@@ -42,6 +43,27 @@ namespace Service.Img
             catch (Exception ex)
             {
                 return false;
+            }
+        }
+
+        public async Task<List<InfoImageViewModel>> GetAllAsync(string imageSetId)
+        {
+            try
+            {
+                var image = await _uow.Image.GetAllAsync(a => a.ImageSetId == imageSetId && a.IsActive == true);
+                if (image != null)
+                {
+                    return image.Select(a => new InfoImageViewModel
+                    {
+                        Id = a.Id,
+                        ImgUrl = a.ImageUrl
+                    }).ToList();
+                }
+                else return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
     }

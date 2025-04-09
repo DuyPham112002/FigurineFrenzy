@@ -5,7 +5,7 @@
         Ended = 1,
         Live = 2,
         Canceled = 3,
-        PendingApproval = 4
-
+        NotStart = 4,        
+        Deleted = 5 
     }
 }

@@ -15,7 +15,7 @@ namespace Service.UserService
         Task<RESPONSECODE> CreateAsync(CreateUserViewModel user, string accId);
         Task<User> GetAsync(string accId);
         Task<RESPONSECODE> UpdateAsync(CreateUserViewModel user, string accId);
-        
+
     }
     public class UserService : IUserService
     {
@@ -53,6 +53,11 @@ namespace Service.UserService
                 }
             }
             return RESPONSECODE.BADREQUEST;
+        }
+
+        public Task<List<UserInfoViewModel>> GetAllUser()
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<User> GetAsync(string accId)

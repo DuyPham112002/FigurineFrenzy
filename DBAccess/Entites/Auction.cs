@@ -7,7 +7,7 @@ public partial class Auction
 {
     public string AuctionId { get; set; } = null!;
 
-    public double? StarPrice { get; set; }
+    public double? StartPrice { get; set; }
 
     public double? CurrentPrice { get; set; }
 
@@ -26,6 +26,10 @@ public partial class Auction
     public string? CategoryId { get; set; }
 
     public DateTime? CreateAt { get; set; }
+
+    public bool? CustomStepPrice { get; set; }
+
+    public double? StepPrice { get; set; }
 
     public virtual ICollection<Bid> Bids { get; set; } = new List<Bid>();
 

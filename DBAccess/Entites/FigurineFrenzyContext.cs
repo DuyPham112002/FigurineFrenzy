@@ -91,7 +91,7 @@ public partial class FigurineFrenzyContext : DbContext
         {
             entity.HasKey(e => e.AuctionId).HasName("PK__Auction__51004A4C4DA83BEB");
 
-            entity.ToTable("Auction");
+            entity.ToTable("Auction", tb => tb.HasTrigger("trg_SetAuctionDefaults"));
 
             entity.Property(e => e.AuctionId)
                 .HasMaxLength(400)
