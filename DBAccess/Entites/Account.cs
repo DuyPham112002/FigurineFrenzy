@@ -19,6 +19,8 @@ public partial class Account
 
     public double Balance { get; set; }
 
+    public string? ImgUrl { get; set; }
+
     public virtual ICollection<Admin> Admins { get; set; } = new List<Admin>();
 
     public virtual ICollection<Auction> AuctionOwners { get; set; } = new List<Auction>();

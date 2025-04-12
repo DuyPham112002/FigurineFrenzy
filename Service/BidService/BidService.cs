@@ -12,7 +12,11 @@ namespace Service.BidService
 {
     public interface IBidService
     {
-        Task<RESPONSECODE> Create(CreateBidViewModel createBidView, string accId);
+        Task<RESPONSECODE> CreateAsync(CreateBidViewModel createBidView, string accId);
+
+        Task<Bid> GetAsync(string auctionId);
+        Task<List<Bid>> GetAllAsync();  
+        Task<List<Bid>> GetAllAsyncById(string accountId);
     }
     public class BidService : IBidService
     {
@@ -21,7 +25,7 @@ namespace Service.BidService
         {
             _uow = uow;
         }
-        public async Task<RESPONSECODE> Create(CreateBidViewModel createBidView, string accId)
+        public async Task<RESPONSECODE> CreateAsync(CreateBidViewModel createBidView, string accId)
         {
             try
             {
@@ -47,6 +51,67 @@ namespace Service.BidService
             catch
             {
                 return RESPONSECODE.ERROR;
+            }
+        }
+
+        public async Task<List<Bid>> GetAllAsync()
+        {
+            try
+            {
+                var getAll = await _uow.Bid.GetAllAsync();
+                if(getAll !=null)
+                {
+                    return getAll.ToList();
+                }
+                else
+                {
+                    throw new Exception("No bid found");
+                }
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Error retrieving bidders: " + ex.Message);
+            }
+        }
+
+        public async Task<List<Bid>> GetAllAsyncById(string accountId)
+        {
+            try
+            {
+                var isExistBid = await _uow.Bid.GetAllAsync(b => b.Bidder == accountId);
+                if(isExistBid != null)
+                {
+                    return isExistBid.ToList();
+                }
+                else
+                {
+                    throw new Exception("No bid found");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving bidders: " + ex.Message);
+            }
+        }
+           
+
+        public async Task<Bid> GetAsync(string auctionId)
+        {
+            try
+            {
+                var bidder = await _uow.Bid.GetFirstOrDefaultAsync(b => b.AuctionId == auctionId);
+                if(bidder != null)
+                {
+                    return bidder;
+                }
+                else
+                {
+                   throw new Exception("Bidder not found");
+                }
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Error retrieving bidder: " + ex.Message);
             }
         }
     }

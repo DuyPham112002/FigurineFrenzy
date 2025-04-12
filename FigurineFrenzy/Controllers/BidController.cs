@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using DBAccess.Entites;
 using FigurineFrenzeyViewModel.Bid;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,7 @@ using Service.AuctionService;
 using Service.BidService;
 using Service.TokenService;
 using Service.UserService;
+using System.Security.Cryptography;
 
 namespace FigurineFrenzy.Controllers
 {
@@ -31,6 +33,38 @@ namespace FigurineFrenzy.Controllers
         }
 
         [Authorize(Roles = "User")]
+        [HttpGet("GetAllByAccId")]
+        public async Task<IActionResult> GetAllByAccId()
+        {
+            string header = Request.Headers["Authorization"].ToString();
+            if (header != null && header.Length > 0)
+            {
+                string token = header.Split(" ")[1];
+                if (token != null)
+                {
+                    var checkToken = await _token.CheckTokenAsync(token);
+                    if (checkToken != null && checkToken.Role == "User")
+                    {
+                        List<Bid> bids = await _bid.GetAllAsyncById(checkToken.AccountId);
+                        //loop to add user have already join Auction to group
+                        foreach (var bid in bids)
+                        {
+                            //You can add the user to the group directly here if needed
+                            await _auctionHub.Groups.AddToGroupAsync(bid.AuctionId, $"auction_{bid.AuctionId}");
+                           
+                        }
+                        return Ok(bids);
+
+                    }
+                    else return Unauthorized();
+                }
+                else return Unauthorized();
+            }
+            else return Unauthorized();
+        }
+
+
+        [Authorize(Roles = "User")]
         [HttpPost("CreateBid")]
         public async Task<IActionResult> Create(CreateBidViewModel createBidView)
         {
@@ -49,7 +83,7 @@ namespace FigurineFrenzy.Controllers
                         if (auction != null && auction.EndTime >= DateTime.Now && ValidBid(createBidView.BidAmount,auction.StepPrice,auction.CurrentPrice,auction.StepPrice))
                         {
 
-                            var createBid = await _bid.Create(createBidView, checkToken.AccountId);
+                            var createBid = await _bid.CreateAsync(createBidView, checkToken.AccountId);
                             if (createBid == Service.Enum.RESPONSECODE.OK)
                             {
                                 var updateCurrentPrice = await _auction.UpdateCurrentPriceAsync(createBidView.AuctionId, createBidView.BidAmount);

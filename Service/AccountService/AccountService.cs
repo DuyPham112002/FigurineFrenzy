@@ -14,6 +14,8 @@ namespace Service.AccountService
     {
         Task<RESPONSECODE> CreateAsync(CreateAccountViewModel create, string accId, string roleInfo);
         Task<Account> CheckLogin(LoginInfoViewModel loginInfo, string roleId);
+        Task<bool> UpdateImgAsync(string imgURL, string accountId);
+        Task<string?> GetImgAsync(string accountId);
 
     }
     public class AccountService : IAccountService
@@ -64,6 +66,45 @@ namespace Service.AccountService
                 }
             }
             else return RESPONSECODE.BADREQUEST;
+        }
+
+        public async Task<string?> GetImgAsync(string accountId)
+        {
+            try
+            {
+                var isExistUSer = await _uow.Account.GetFirstOrDefaultAsync(a => a.AccountId == accountId);
+                if (isExistUSer != null)
+                {
+                    var img = isExistUSer.ImgUrl;
+                    return (img);
+                }
+                else return null;
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<bool> UpdateImgAsync(string imgURL,string accountId)
+        {
+            try
+            {
+                var isExistUSer = await _uow.Account.GetFirstOrDefaultAsync(a => a.AccountId == accountId);
+                if(isExistUSer != null)
+                {
+                    isExistUSer.ImgUrl = imgURL;
+                    _uow.Account.Update(isExistUSer);
+                    await _uow.SaveAsync();
+                    return true;
+                }
+                else return false;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

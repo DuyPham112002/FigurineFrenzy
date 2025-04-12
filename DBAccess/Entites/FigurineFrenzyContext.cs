@@ -55,6 +55,10 @@ public partial class FigurineFrenzyContext : DbContext
                 .HasMaxLength(400)
                 .IsUnicode(false);
             entity.Property(e => e.CreateAt).HasColumnType("datetime");
+            entity.Property(e => e.ImgUrl)
+                .HasMaxLength(400)
+                .IsUnicode(false)
+                .HasColumnName("ImgURL");
             entity.Property(e => e.Password).HasMaxLength(500);
             entity.Property(e => e.Phone)
                 .HasMaxLength(11)
