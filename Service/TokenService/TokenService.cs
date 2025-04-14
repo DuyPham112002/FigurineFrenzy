@@ -1,6 +1,7 @@
 ﻿using DBAccess.Entites;
 using DBAccess.UnitOfWork;
 using FigurineFrenzeyViewModel.Token;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -18,14 +19,19 @@ namespace Service.TokenService
         Task<TokenDecodeViewModel> CheckTokenAsync(string token);
         Task<bool> SaveToken(string tokenvalue, string accId);
         Task<bool> DeleteTokenAsync(string tokenvalue, string accId);
+        string GenerateResetToken(string accountId);
+        Task<ResetTokenDecodeViewModel> CheckResetTokenAsync(string token);
+
     }
     public class TokenService : ITokenService
     {
         private readonly IUnitOfWork _uow;
-        
-        public TokenService(IUnitOfWork uow)
+        private readonly IConfiguration _config;
+
+        public TokenService(IUnitOfWork uow, IConfiguration config)
         {
             _uow = uow;
+            _config = config;
         }
 
         public async Task<TokenDecodeViewModel> CheckTokenAsync(string token)
@@ -182,5 +188,79 @@ namespace Service.TokenService
             }
         
         }
+
+        public string GenerateResetToken(string Email)
+        {
+            var jwtSetting = _config.GetSection("JwtSetting");
+            var secretkey = jwtSetting["Key"];  
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Email, Email),
+                new Claim("type", "reset")            };
+    
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretkey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: jwtSetting["Issuer"],
+                audience: jwtSetting["Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtSetting["ExpiresMinutes"])),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+
+        }
+
+
+        public async Task<ResetTokenDecodeViewModel> CheckResetTokenAsync(string token)
+        {
+            var principal = ValidateResetToken(token);
+            if(principal == null)
+            
+                return null;
+            
+            var Email = principal.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+            if(string.IsNullOrEmpty(Email))
+                return null;
+
+            return new ResetTokenDecodeViewModel
+            {
+                Email = Email       
+            };
+
+        }
+
+
+        private ClaimsPrincipal ValidateResetToken(string token)
+        {
+            var jwtSettings = _config.GetSection("JwtSetting");
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
+
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings["Issuer"],
+                    ValidAudience = jwtSettings["Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+
+                return principal;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+      
     }
 }

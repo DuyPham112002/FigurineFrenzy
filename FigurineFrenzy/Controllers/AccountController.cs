@@ -9,10 +9,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Identity.Client;
 using Service.AccountService;
 using Service.AdminService;
+using Service.EmailService;
 using Service.HashService;
 using Service.RoleService;
 using Service.TokenService;
 using Service.UserService;
+using System.Security.Claims;
 
 namespace FigurineFrenzy.Controllers
 {
@@ -27,9 +29,10 @@ namespace FigurineFrenzy.Controllers
         private readonly IValidator _validate;
         private readonly ITokenService _token;
         private readonly IAdminService _admin;
+        private readonly IEmailService _email;
         private readonly string privateKey = "8243--jjseijuq[ojnj*@*&%))#(_^**...a.k';][]";
         public AccountController(IAccountService account, IRoleService role, IUserService user, IHashService hash, IValidator validate, ITokenService token
-            , IAdminService admin)
+            , IAdminService admin, IEmailService email)
         {
             _account = account;
             _role = role;
@@ -38,6 +41,7 @@ namespace FigurineFrenzy.Controllers
             _validate = validate;
             _token = token;
             _admin = admin;
+            _email = email;
         }
 
         [Authorize(Roles = "User")]
@@ -176,5 +180,48 @@ namespace FigurineFrenzy.Controllers
                 return BadRequest(message);
             }
         }
+
+        //This API will excute task verify Email and send link to reset password
+        [AllowAnonymous]
+        [HttpPost("Forgot-Password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotpasswordViewModel forgotpassword)
+        {
+            var isExist = await _user.GetValidEmailAsync(forgotpassword.Email);
+            if(isExist == null) return NotFound("Email not found");
+
+            var token = _token.GenerateResetToken(isExist.Email);
+
+            var resetUrl = $"http://127.0.0.1:5500/verify.html?token={token}"; 
+            await _email.SendResetPasswordEmail(forgotpassword.Email, resetUrl);
+
+            return Ok("Reset password link has been sent to your email");
+
+
+        }
+
+
+        //This API will excute task reset password
+        [HttpPost("Reset-Password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewoModel request)
+        {
+            var isExistEmail = await _token.CheckResetTokenAsync(request.token);
+            if(isExistEmail == null) return BadRequest("Token is invalid or expired");  
+
+            var user = await _user.GetValidEmailAsync(isExistEmail.Email);
+            if(user == null) return NotFound("User not found");
+
+            var resetpassword = await _account.RessetPasswordAsync(user.AccountId, _hash.SHA256(request.NewPassword + privateKey));
+            if(resetpassword)
+            {
+                return Ok("Password reset successfully");
+            }
+            else
+            {
+                return BadRequest("Failed to reset password");
+            }
+        }
+
+
+
     }
 }

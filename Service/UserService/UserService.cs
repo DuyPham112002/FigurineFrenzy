@@ -15,6 +15,8 @@ namespace Service.UserService
         Task<RESPONSECODE> CreateAsync(CreateUserViewModel user, string accId);
         Task<User> GetAsync(string accId);
         Task<RESPONSECODE> UpdateAsync(CreateUserViewModel user, string accId);
+        Task<User> GetValidEmailAsync(string Email);
+     
 
     }
     public class UserService : IUserService
@@ -58,6 +60,19 @@ namespace Service.UserService
         public Task<List<UserInfoViewModel>> GetAllUser()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<User> GetValidEmailAsync(string Email)
+        {
+            var isExistEmail = await _uow.User.GetFirstOrDefaultAsync(a => a.Email == Email);
+            if(isExistEmail != null)
+            {
+                return isExistEmail;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<User> GetAsync(string accId)

@@ -5,6 +5,7 @@ using DBAccess.UnitOfWork;
 using FigurineFrenzy.Background;
 using FigurineFrenzy.Controllers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -14,6 +15,7 @@ using Service.AuctionHubService;
 using Service.AuctionService;
 using Service.BidService;
 using Service.CategoryService;
+using Service.EmailService;
 using Service.HashService;
 using Service.Img;
 using Service.ImgSet;
@@ -92,7 +94,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key)
         };
-    });
+
+            });
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
@@ -116,6 +119,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
     builder.RegisterType<ImgSetService>().As<IImgSetService>();
     builder.RegisterType<AuctionService>().As<IAuctionService>();
     builder.RegisterType<BidService>().As<IBidService>();
+    builder.RegisterType<EmailService>().As<IEmailService>();
 });
 
 var app = builder.Build();

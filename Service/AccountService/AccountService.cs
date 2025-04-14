@@ -16,6 +16,8 @@ namespace Service.AccountService
         Task<Account> CheckLogin(LoginInfoViewModel loginInfo, string roleId);
         Task<bool> UpdateImgAsync(string imgURL, string accountId);
         Task<string?> GetImgAsync(string accountId);
+        Task<Account> GetAsync(string accId);
+        Task<bool> RessetPasswordAsync(string accountId, string password);
 
     }
     public class AccountService : IAccountService
@@ -40,7 +42,7 @@ namespace Service.AccountService
 
         public async Task<RESPONSECODE> CreateAsync(CreateAccountViewModel create, string accId, string roleInfo)
         {
-            Account acc = await _uow.Account.GetFirstOrDefaultAsync(a=>a.Phone == create.Phone);
+            Account acc = await _uow.Account.GetFirstOrDefaultAsync(a => a.Phone == create.Phone);
             if (acc == null)
             {
                 Account newAcc = new Account()
@@ -68,6 +70,23 @@ namespace Service.AccountService
             else return RESPONSECODE.BADREQUEST;
         }
 
+        public async Task<Account> GetAsync(string accId)
+        {
+            try
+            {
+                var isExistUSer = await _uow.Account.GetFirstOrDefaultAsync(a => a.AccountId == accId);
+                if (isExistUSer != null)
+                {
+                    return isExistUSer;
+                }
+                else return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public async Task<string?> GetImgAsync(string accountId)
         {
             try
@@ -87,12 +106,28 @@ namespace Service.AccountService
             }
         }
 
-        public async Task<bool> UpdateImgAsync(string imgURL,string accountId)
+        public async Task<bool> RessetPasswordAsync(string accountId, string password)
+        {
+
+            var isExistUSer = await _uow.Account.GetFirstOrDefaultAsync(a => a.AccountId == accountId);
+            if (isExistUSer != null)
+            {
+                isExistUSer.Password = password;
+
+                _uow.Account.Update(isExistUSer);
+                await _uow.SaveAsync();
+                return true;
+            }
+            else return false;
+
+        }
+
+        public async Task<bool> UpdateImgAsync(string imgURL, string accountId)
         {
             try
             {
                 var isExistUSer = await _uow.Account.GetFirstOrDefaultAsync(a => a.AccountId == accountId);
-                if(isExistUSer != null)
+                if (isExistUSer != null)
                 {
                     isExistUSer.ImgUrl = imgURL;
                     _uow.Account.Update(isExistUSer);
@@ -101,7 +136,7 @@ namespace Service.AccountService
                 }
                 else return false;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
