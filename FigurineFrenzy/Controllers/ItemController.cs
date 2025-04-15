@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Abstractions;
+using Service.AuctionService;
 using Service.Img;
 using Service.ImgSet;
 using Service.ItemService;
@@ -22,14 +23,16 @@ namespace FigurineFrenzy.Controllers
         private readonly IImgService _img;
         private readonly IImgSetService _imgSet;
         private readonly IHostEnvironment _webHostEnvironment;
+        private readonly IAuctionService _auction;
 
-        public ItemController(IItemService item, ITokenService token, IImgService img, IImgSetService imgSet, IHostEnvironment webHostEnvironment)
+        public ItemController(IItemService item, ITokenService token, IImgService img, IImgSetService imgSet, IHostEnvironment webHostEnvironment, IAuctionService auction)
         {
             _item = item;
             _token = token;
             _img = img;
             _imgSet = imgSet;
             _webHostEnvironment = webHostEnvironment;
+            _auction = auction;
         }
 
         [Authorize(Roles = "User")]
@@ -121,11 +124,22 @@ namespace FigurineFrenzy.Controllers
                             {
                                 return Ok("Create Item Success");
                             }
-                            else return BadRequest();
+                            else
+                            {
+                                //if create item failed, delete imgSet have already created in database
+                                var deleteImgSet = await _imgSet.DeleteAsync(imgSetId);
+                                return BadRequest("Cannot Create Item to Add ");
+                            }
 
                         }
+                        else
+                        {
+                            //If create imgSet failed, delete Auction have already created in database
+                            var deleteAuction = await _auction.DeleteAsync(checkToken.AccountId,item.AuctionId);
+                            return BadRequest("Cannot Create ImageSet");
+                        }
 
-                        return StatusCode(500);
+                       
 
                     }
                     else return Unauthorized();

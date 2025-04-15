@@ -9,7 +9,7 @@ namespace Service.AuctionHubService
 {
     public class AuctionHubService :Hub
     {
-        public async Task JoinAuctionGroup(string auctionId, string username)
+        public async Task JoinAuctionGroup(string auctionId, string userName)
         {
             var groupName = $"auction_{auctionId}";
             
@@ -18,7 +18,7 @@ namespace Service.AuctionHubService
 
             // Notify others already in the group (not the one who just joined)
             await Clients.OthersInGroup(groupName)
-                    .SendAsync("UserJoinedAuction", auctionId, username);
+                    .SendAsync("UserJoinedAuction", auctionId, userName);
         }
 
         public async Task UpdateCurrentPrice(string auctionId, double currentPrice)

@@ -13,8 +13,9 @@ namespace Service.CategoryService
     public interface ICategoryService
     {
         Task<RESPONSECODE> CreateAsync(CategoryViewModel category);
+        Task<List<Category>> GetAllActiveAsync();
         Task<List<Category>> GetAllAsync();
-        Task<RESPONSECODE> DeleteAsync(string Id);
+        Task<RESPONSECODE> DissableAsync(string Id);
         Task<RESPONSECODE> ActivateAsync(string Id);
         Task<Category> GetAsync(string Id);
         Task<RESPONSECODE> UpdateAsync(string Id, CategoryViewModel categoryView);
@@ -78,7 +79,7 @@ namespace Service.CategoryService
             }
         }
 
-        public async Task<RESPONSECODE> DeleteAsync(string Id)
+        public async Task<RESPONSECODE> DissableAsync(string Id)
         {
             try
             {
@@ -101,6 +102,23 @@ namespace Service.CategoryService
             }
         }
 
+        public async Task<List<Category>> GetAllActiveAsync()
+        {
+            try
+            {
+                List<Category> getAllCate = await _uow.Category.GetAllAsync(a => a.IsActive == true);
+                if (getAllCate != null)
+                {
+                    return getAllCate;
+                }
+                else return null;
+                
+            }
+            catch { 
+                return null;
+            }
+        }
+
         public async Task<List<Category>> GetAllAsync()
         {
             try
@@ -111,9 +129,10 @@ namespace Service.CategoryService
                     return getAllCate;
                 }
                 else return null;
-                
+
             }
-            catch { 
+            catch
+            {
                 return null;
             }
         }

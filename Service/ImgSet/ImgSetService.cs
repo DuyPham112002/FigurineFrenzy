@@ -13,6 +13,7 @@ namespace Service.ImgSet
     {
         Task<RESPONSECODE> CreateAsync(string imgSetId);
         Task<ImageSet> GetAsync(string imgSetId);
+        Task<RESPONSECODE> DeleteAsync(string imgSetId);
     }
     public class ImgSetService : IImgSetService
     {
@@ -40,6 +41,26 @@ namespace Service.ImgSet
             {
                 return RESPONSECODE.INTERNALERROR;
             }    
+        }
+
+        public async Task<RESPONSECODE> DeleteAsync(string imgSetId)
+        {
+            try
+            {
+                var imgSet = await _uow.ImageSet.GetFirstOrDefaultAsync(a => a.Id == imgSetId);
+                if (imgSet != null)
+                {       
+                    _uow.ImageSet.Remove(imgSet);
+                    await _uow.SaveAsync();
+                    return RESPONSECODE.OK;
+                }
+                else return RESPONSECODE.INTERNALERROR;
+            }
+            catch
+            {
+                return RESPONSECODE.ERROR;
+            }
+           
         }
 
         public async Task<ImageSet> GetAsync(string imgSetId)

@@ -1,6 +1,7 @@
 ﻿using DBAccess.Entites;
 using DBAccess.UnitOfWork;
 using FigurineFrenzeyViewModel.Item;
+using Microsoft.AspNetCore.Mvc;
 using Service.Enum;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace Service.ItemService
     {
         public Task<RESPONSECODE> CreateAsync(CreateItemViewModel item, string imageSetId);
         public Task<List<GetinfoItemViewModel>> GetAllAsync(string AuctionId);
+        public Task<RESPONSECODE> DeleteAsync(string ItemId);
     }
     public class ItemService : IItemService
     {
@@ -48,6 +50,25 @@ namespace Service.ItemService
             catch
             {
                 return RESPONSECODE.ERROR; 
+            }
+        }
+
+        public async Task<RESPONSECODE> DeleteAsync(string ItemId)
+        {
+            try
+            {
+                var getItem = await _uow.Item.GetFirstOrDefaultAsync(a => a.ItemId == ItemId);
+                if(getItem != null)
+                {
+                    _uow.Item.Remove(getItem);
+                    await _uow.SaveAsync();
+                    return RESPONSECODE.OK;
+                }
+                else return RESPONSECODE.INTERNALERROR;
+            }
+            catch
+            {
+                return RESPONSECODE.ERROR;
             }
         }
 

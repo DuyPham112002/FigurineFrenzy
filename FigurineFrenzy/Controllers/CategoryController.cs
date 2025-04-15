@@ -80,8 +80,8 @@ namespace FigurineFrenzy.Controllers
             else return Unauthorized();
         }
 
-        [Authorize(Roles = "Admin, User")]
-        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
             string header = Request.Headers["Authorization"].ToString();
@@ -91,7 +91,7 @@ namespace FigurineFrenzy.Controllers
                 if (token != null)
                 {
                     var checkToken = await _token.CheckTokenAsync(token);
-                    if (checkToken != null && checkToken.Role == "Admin" || checkToken.Role == "User")
+                    if (checkToken != null && checkToken.Role == "Admin")
                     {
                         List<Category> listCate = await _category.GetAllAsync();
                         if (listCate != null)
@@ -107,9 +107,38 @@ namespace FigurineFrenzy.Controllers
             else return Unauthorized();
         }
 
+
+
+        [Authorize(Roles = "User")]
+        [HttpGet("Activation")]
+        public async Task<IActionResult> GetAllActive()
+        {
+            string header = Request.Headers["Authorization"].ToString();
+            if (header != null && header.Length > 0)
+            {
+                string token = header.Split(" ")[1];
+                if (token != null)
+                {
+                    var checkToken = await _token.CheckTokenAsync(token);
+                    if (checkToken != null && checkToken.Role == "User")
+                    {
+                        List<Category> listCate = await _category.GetAllActiveAsync();
+                        if (listCate != null)
+                        {
+                            return Ok(listCate);
+                        }
+                        else return StatusCode(500);
+                    }
+                    else return Unauthorized();
+                }
+                else return Unauthorized();
+            }
+            else return Unauthorized();
+        }
+
         [Authorize(Roles = "Admin")]
-        [HttpDelete("Delete")]
-        public async Task<IActionResult> Delete(string Id)
+        [HttpPut("Dissability")]
+        public async Task<IActionResult> Disability(string Id)
         {
             string header = Request.Headers["Authorization"].ToString();
             if (header != null && header.Length > 0)
@@ -123,7 +152,7 @@ namespace FigurineFrenzy.Controllers
                         var isExistCategory = await _category.GetAsync(Id);
                         if (isExistCategory != null)
                         {
-                            var deleteCategory = await _category.DeleteAsync(Id);
+                            var deleteCategory = await _category.DissableAsync(Id);
                             if (deleteCategory == Service.Enum.RESPONSECODE.OK)
                             {
                                 return Ok("Delete Success");

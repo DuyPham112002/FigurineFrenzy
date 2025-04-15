@@ -25,6 +25,7 @@ namespace Service.AuctionService
         public Task<string> CompletedAsync(string AuctionId);
         public Task<string> StartAsync(string AuctionId);
         public Task<RESPONSECODE> UpdateCurrentPriceAsync(string auctionId, double currentPrice);
+        public Task<RESPONSECODE> DeleteAysc(string auctionId);
     }
     public class AuctionService : IAuctionService
     {
@@ -421,6 +422,25 @@ namespace Service.AuctionService
             catch
             {
                 return null;
+            }
+        }
+
+        public async Task<RESPONSECODE> DeleteAysc(string auctionId)
+        {
+            try
+            {
+                var isExistAuction = await _uow.Auction.GetFirstOrDefaultAsync(a => a.AuctionId == auctionId);
+                if (isExistAuction != null)
+                {
+                    _uow.Auction.Remove(isExistAuction);
+                    await _uow.SaveAsync();
+                    return RESPONSECODE.OK;
+                }
+                else return RESPONSECODE.INTERNALERROR;
+            }
+            catch
+            {
+                return RESPONSECODE.ERROR;
             }
         }
     }
