@@ -21,13 +21,14 @@ namespace Service.AuctionHubService
                     .SendAsync("UserJoinedAuction", auctionId, userName);
         }
 
-        public async Task UpdateCurrentPrice(string auctionId, double currentPrice)
+        public async Task UpdateCurrentPrice(string auctionId, double currentPrice,string userName)
         {
+            var groupName = $"auction_{auctionId}";
             await Clients.All.SendAsync("ReceiveBidUpdate", auctionId, currentPrice);
 
             //Send to people in the auction group for extra info
-            await Clients.Groups($"auction_{auctionId}")
-                .SendAsync("ReceiveAuctionBidDetail", auctionId, currentPrice);
+            await Clients.Groups(groupName)
+                .SendAsync("ReceiveAuctionBidDetail", auctionId, userName);
         }
 
         public async Task UpdateStatus(string auctionId, string status)
@@ -36,6 +37,11 @@ namespace Service.AuctionHubService
             //Send to people in the auction group for extra info
             await Clients.Groups($"auction_{auctionId}")
                 .SendAsync("ReceiveAuctionStatusDetail", auctionId, status);
+        }
+
+        public async Task NotifyNewAuctionCreated()
+        {
+            await Clients.All.SendAsync("ReceiveNewAuctionAlert");
         }
 
 

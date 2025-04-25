@@ -1,0 +1,76 @@
+.countdown-box {
+    display: inline-block;
+    padding: 20px;
+    border: 3px solid black;
+    border-radius: 10px;
+    background-color: lightgray;
+    font-size: 2em;
+    font-weight: bold;
+    color: red;
+}
+
+.time-section {
+    display: inline-block;
+    padding: 10px;
+    margin: 0 5px;
+    background: white;
+    border-radius: 5px;
+    color: black;
+    font-weight: bold;
+}
+
+.pull-left a:hover {
+    text-decoration: underline;
+    background-color: aliceblue;
+}
+
+#preview {
+
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#preview.active {
+    border-color: red;
+    background: rgba(255, 0, 0, 0.1);
+}
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.custom-carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.6); /* Dark semi-transparent background */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.custom-carousel-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8); /* Darker on hover */
+}
+
+.carousel-control-prev {
+    left: -60px; /* Adjust as needed */
+}
+
+.carousel-control-next {
+    right: -60px; /* Adjust as needed */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1); /* Makes the default white Bootstrap icon black */
+}
+

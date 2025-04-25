@@ -1,6 +1,7 @@
 ﻿using DBAccess.Entites;
 using DBAccess.UnitOfWork;
 using FigurineFrenzeyViewModel.Auction;
+using FigurineFrenzeyViewModel.Bid;
 using FigurineFrenzeyViewModel.Image;
 using FigurineFrenzeyViewModel.Item;
 using FigurineFrenzy.Enum;
@@ -15,17 +16,19 @@ namespace Service.AuctionService
 {
     public interface IAuctionService
     {
-        public Task<Auction> CreateAsync(string accId, CreateAuctionViewModel auctionView, string cateId);
-        public Task<RESPONSECODE> UpdateAsync(string accId, CreateAuctionViewModel auctionView, string Id, string categoryId);
-        public Task<GetInfroAuctionViewModel> GetAsync(string auctionId);
-        public Task<List<Auction>> GetAllByAccIdAsync(string accId);
-        public Task<List<Auction>> GetAllAsync();  
-        public Task<List<GetInfroAuctionViewModel>> GetAllLiveAuctionAsync();
-        public Task<RESPONSECODE> DeleteAsync(string accId, string AuctionId);
-        public Task<string> CompletedAsync(string AuctionId);
-        public Task<string> StartAsync(string AuctionId);
-        public Task<RESPONSECODE> UpdateCurrentPriceAsync(string auctionId, double currentPrice);
-        public Task<RESPONSECODE> DeleteAysc(string auctionId);
+        Task<Auction> CreateAsync(string accId, CreateAuctionViewModel auctionView, string cateId);
+        Task<RESPONSECODE> UpdateAsync(string accId, CreateAuctionViewModel auctionView, string Id, string categoryId);
+        Task<GetInfroAuctionViewModel> GetAsync(string auctionId);
+        Task<List<Auction>> GetAllByAccIdAsync(string accId);
+        Task<List<Auction>> GetAllAsync();  
+        Task<List<GetInfroAuctionViewModel>> GetAllLiveAuctionAsync();
+        Task<RESPONSECODE> DeleteAsync(string accId, string AuctionId);
+        Task<string> CompletedAsync(string AuctionId);
+        Task<string> StartAsync(string AuctionId);
+        Task<RESPONSECODE> UpdateCurrentPriceAsync(string auctionId, double currentPrice);
+        Task<RESPONSECODE> DeleteAysc(string auctionId);
+        Task<List<Auction>> AuctionStatusCheckAsync(List<string> auctionIds);    
+
     }
     public class AuctionService : IAuctionService
     {
@@ -87,139 +90,142 @@ namespace Service.AuctionService
             //If Step Price = 0 means user not type StepPrice ==> seem Null
             try
             {
-                //Case 1: Use Default and Exist Finalize Price and No StartPrice
-                if (!auctionView.CustomStepPrice && auctionView.FinalizePrice != 0 && auctionView.StepPrice == 0)
+                if (auctionView.StartTime >= DateTime.Now && auctionView.StartTime <= auctionView.EndTime)
                 {
-                    Auction newAuction = new Auction
+                    //Case 1: Use Default and Exist Finalize Price and No StartPrice
+                    if (!auctionView.CustomStepPrice && auctionView.FinalizePrice != 0 && auctionView.StartPrice == 0)
                     {
-                        AuctionId = Guid.NewGuid().ToString(),
-                        FinalizePrice = auctionView.FinalizePrice,
-                        StartTime = auctionView.StartTime,
-                        EndTime = auctionView.EndTime,
-                        Status = STATUS.NotStart.ToString(),
-                        OwnerId = Id,
-                        CategoryId = categoryId,
-                        CreateAt = DateTime.Now,
-                        CustomStepPrice = auctionView.CustomStepPrice
+                        Auction newAuction = new Auction
+                        {
+                            AuctionId = Guid.NewGuid().ToString(),
+                            FinalizePrice = auctionView.FinalizePrice,
+                            StartTime = auctionView.StartTime,
+                            EndTime = auctionView.EndTime,
+                            Status = STATUS.NotStart.ToString(),
+                            OwnerId = Id,
+                            CategoryId = categoryId,
+                            CreateAt = DateTime.Now,
+                            CustomStepPrice = auctionView.CustomStepPrice,
+                        };
 
-                    };
-                
-                    if (newAuction.EndTime >= DateTime.Now && newAuction.StartTime < newAuction.EndTime)
-                    {
-                       
-                        await _uow.Auction.AddAsync(newAuction);
-                        await _uow.SaveAsync();
+                        if (newAuction.EndTime >= DateTime.Now && newAuction.StartTime < newAuction.EndTime)
+                        {
 
-                        return newAuction;
+                            await _uow.Auction.AddAsync(newAuction);
+                            await _uow.SaveAsync();
+
+                            return newAuction;
+
+                        }
+                        else throw new ArgumentException("Please check Time Start and Time End of Auction are correct ?");
+
+
 
                     }
-                    else throw new ArgumentException("Please check Time Start and Time End of Auction are correct ?");
-
-
-
-                }
-                //Case 2: Use Default and Exist StartPrice and No FinalPrice
-                else if (!auctionView.CustomStepPrice && auctionView.FinalizePrice == 0 && auctionView.StartPrice != null && auctionView.StepPrice == 0)
-                {
-                    Auction newAuction = new Auction
+                    //Case 2: Use Default and Exist StartPrice and No FinalPrice
+                    else if (!auctionView.CustomStepPrice && auctionView.FinalizePrice == 0 && auctionView.StartPrice != null && auctionView.StepPrice == 0)
                     {
-                        AuctionId = Guid.NewGuid().ToString(),
-                        StartTime = auctionView.StartTime,
-                        EndTime = auctionView.EndTime,
-                        Status = STATUS.NotStart.ToString(),
-                        OwnerId = Id,
-                        CategoryId = categoryId,
-                        CreateAt = DateTime.Now,
-                        CustomStepPrice = auctionView.CustomStepPrice,
-                        StartPrice = auctionView.StartPrice
-                    };
-                    if (newAuction.EndTime >= DateTime.Now && newAuction.StartTime < newAuction.EndTime)
-                    {
+                        Auction newAuction = new Auction
+                        {
+                            AuctionId = Guid.NewGuid().ToString(),
+                            StartTime = auctionView.StartTime,
+                            EndTime = auctionView.EndTime,
+                            Status = STATUS.NotStart.ToString(),
+                            OwnerId = Id,
+                            CategoryId = categoryId,
+                            CreateAt = DateTime.Now,
+                            CustomStepPrice = auctionView.CustomStepPrice,
+                            StartPrice = auctionView.StartPrice
+                        };
+                        if (newAuction.EndTime >= DateTime.Now && newAuction.StartTime < newAuction.EndTime)
+                        {
 
-                        await _uow.Auction.AddAsync(newAuction);
-                        await _uow.SaveAsync();
+                            await _uow.Auction.AddAsync(newAuction);
+                            await _uow.SaveAsync();
 
-                        return newAuction;
+                            return newAuction;
 
+                        }
+                        else throw new ArgumentException("Please check Time Start and Time End of Auction are correct ?");
                     }
-                    else throw new ArgumentException("Please check Time Start and Time End of Auction are correct ?");
-                }
-                //Case 3: Use Custom Step Price and Exist Finalize Price and Step Price, Start Price (Required)
-                else if (auctionView.CustomStepPrice && auctionView.FinalizePrice != null && auctionView.StepPrice != null)
-                {
-                    if (ValidStarPrice(auctionView.StartPrice, auctionView.FinalizePrice) && ValidStepPrice(auctionView.StepPrice, auctionView.StartPrice)) //Step Price should be max 50% of Finalize Price
-                        throw new ArgumentException("Step Price should be max 50% of Finalize Price");
-                    Auction newAuction = new Auction
+                    //Case 3: Use Custom Step Price and Exist Finalize Price and Step Price, Start Price (Required)
+                    else if (auctionView.CustomStepPrice && auctionView.FinalizePrice != null && auctionView.StepPrice != null)
                     {
-                        AuctionId = Guid.NewGuid().ToString(),
-                        StartPrice = auctionView.StartPrice,
-                        FinalizePrice = auctionView.FinalizePrice,
-                        StartTime = auctionView.StartTime,
-                        EndTime = auctionView.EndTime,
-                        Status = STATUS.NotStart.ToString(),
-                        OwnerId = Id,
-                        CategoryId = categoryId,
-                        CreateAt = DateTime.Now,
-                        StepPrice = auctionView.StepPrice,
-                        CustomStepPrice = auctionView.CustomStepPrice,
-                    };
-                   
-                    if (newAuction.EndTime >= DateTime.Now && newAuction.StartTime < newAuction.EndTime)
-                    {
-                       
-                        await _uow.Auction.AddAsync(newAuction);
-                        await _uow.SaveAsync();
+                        if (ValidStarPrice(auctionView.StartPrice, auctionView.FinalizePrice) && ValidStepPrice(auctionView.StartPrice, auctionView.StepPrice)) //Step Price should be max 50% of Finalize Price
+                        {
+                            Auction newAuction = new Auction
+                            {
+                                AuctionId = Guid.NewGuid().ToString(),
+                                StartPrice = auctionView.StartPrice,
+                                FinalizePrice = auctionView.FinalizePrice,
+                                StartTime = auctionView.StartTime,
+                                EndTime = auctionView.EndTime,
+                                Status = STATUS.NotStart.ToString(),
+                                OwnerId = Id,
+                                CategoryId = categoryId,
+                                CreateAt = DateTime.Now,
+                                StepPrice = auctionView.StepPrice,
+                                CustomStepPrice = auctionView.CustomStepPrice,
+                            };
 
-                        return newAuction;
+                            if (newAuction.EndTime >= DateTime.Now && newAuction.StartTime < newAuction.EndTime)
+                            {
 
+                                await _uow.Auction.AddAsync(newAuction);
+                                await _uow.SaveAsync();
+
+                                return newAuction;
+
+                            }
+                            else throw new ArgumentException("Please check Time Start and Time End of Auction are correct ?");
+                        }
+                        else throw new ArgumentException("Please check Start Price and Finalize Price are correct ?"); //Step Price should be max 50% of Finalize Price
                     }
-                    else throw new ArgumentException("Please check Time Start and Time End of Auction are correct ?");
+                    else
+                    {
+                        Auction newAuction = new Auction
+                        {
+                            AuctionId = Guid.NewGuid().ToString(),
+                            StartPrice = auctionView.StartPrice,
+                            FinalizePrice = auctionView.FinalizePrice,
+                            StartTime = auctionView.StartTime,
+                            EndTime = auctionView.EndTime,
+                            Status = STATUS.NotStart.ToString(),
+                            OwnerId = Id,
+                            CategoryId = categoryId,
+                            CreateAt = DateTime.Now,
+                            CustomStepPrice = auctionView.CustomStepPrice
+                        };
 
+                        if (newAuction.EndTime >= DateTime.Now && newAuction.StartTime < newAuction.EndTime)
+                        {
+
+                            await _uow.Auction.AddAsync(newAuction);
+                            await _uow.SaveAsync();
+                            return newAuction;
+                        }
+                        else throw new ArgumentException("Please check Time Start and Time End of Auction are correct ?");
+                    }
                 }else
-                {
-                    Auction newAuction = new Auction
-                    {
-                        AuctionId = Guid.NewGuid().ToString(),
-                        StartPrice = auctionView.StartPrice,
-                        FinalizePrice = auctionView.FinalizePrice,
-                        StartTime = auctionView.StartTime,
-                        EndTime = auctionView.EndTime,
-                        Status = STATUS.NotStart.ToString(),
-                        OwnerId = Id,
-                        CategoryId = categoryId,
-                        CreateAt = DateTime.Now,
-                        CustomStepPrice = auctionView.CustomStepPrice
-                    };
-                  
-                    if (newAuction.EndTime >= DateTime.Now && newAuction.StartTime < newAuction.EndTime)
-                    {
 
-                        await _uow.Auction.AddAsync(newAuction);
-                        await _uow.SaveAsync();
-                        return newAuction;
-                    }
-                    else throw new ArgumentException("Please check Time Start and Time End of Auction are correct ?");
-                }
-
-
-                    return null;    
+                  throw new AggregateException("You must to check agian Time Start and Time End");    
             }
-            catch(Exception ex)
+            catch(AggregateException ex)
             {
-                throw new AggregateException("Can't Create Auction");
+                return null;
             }
         }
 
         //Validate StarPirce
         private bool ValidStarPrice(double StartPrice, double FinalizePrice)
         {
-            if (StartPrice <= FinalizePrice * 50 / 100 && StartPrice >= 0)
+            if (StartPrice <= FinalizePrice * 50 / 100 && StartPrice >= FinalizePrice * 1 /100 )
                 return true;
             else return false;
         }
 
         //Validate StepPrice
-        private bool ValidStepPrice(double? StartPrice, double StepPrice)
+        private bool ValidStepPrice(double StartPrice, double? StepPrice)
         {
             if (StepPrice >= StartPrice / 100 && StepPrice <= StartPrice * 50 / 100)
             {
@@ -300,7 +306,7 @@ namespace Service.AuctionService
                 var isExistListAuction = await _uow.Auction.GetAllAsync(a => a.OwnerId == accId);
                 if (isExistListAuction != null)
                 {
-                    return isExistListAuction;
+                    return isExistListAuction.ToList();
                 }
                 else return null;
             }
@@ -442,6 +448,16 @@ namespace Service.AuctionService
             {
                 return RESPONSECODE.ERROR;
             }
+        }
+
+        public async Task<List<Auction>> AuctionStatusCheckAsync(List<string> auctionIds)
+        {
+           var isExistAuction = await _uow.Auction.GetAllAsync(a => auctionIds.Contains(a.AuctionId) && a.Status == STATUS.Live.ToString());
+            if (isExistAuction != null)
+            {
+                return isExistAuction.ToList();
+            }
+            else return null;
         }
     }
 }

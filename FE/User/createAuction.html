@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Basic Page Info -->
+    <meta charset="utf-8" />
+    <title>DeskApp - Bootstrap Admin Dashboard HTML Template</title>
+
+    <!-- Site favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="vendors/images/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="vendors/images/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="vendors/images/favicon-16x16.png" />
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="vendors/styles/core.css" />
+    <link rel="stylesheet" type="text/css" href="vendors/styles/icon-font.min.css" />
+    <link rel="stylesheet" type="text/css" href="src/plugins/cropperjs/dist/cropper.css" />
+    <link rel="stylesheet" type="text/css" href="vendors/styles/style.css" />
+
+    <link href="
+https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css
+" rel="stylesheet">
+    <style>
+        #preview-container {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            max-width: 100%;
+            white-space: nowrap;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+       
+        }
+
+        .image-preview {
+            max-height: 100px;
+            border-radius: 5px;
+        }
+
+        .card-hover:hover {
+            transform: scale(1.03);
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="header">
+        <div class="header-left">
+            <div class="menu-icon bi bi-list"></div>
+            <div class="search-toggle-icon bi bi-search" data-toggle="header_search"></div>
+            <div class="header-search">
+                <form>
+                    <div class="form-group mb-0">
+                        <i class="dw dw-search2 search-icon"></i>
+                        <input type="text" class="form-control search-input" placeholder="Search Here" />
+                        <div class="dropdown">
+                            <a class="dropdown-toggle no-arrow" href="#" role="button" data-toggle="dropdown">
+                                <i class="ion-arrow-down-c"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <div class="form-group row">
+                                    <label class="col-sm-12 col-md-2 col-form-label">From</label>
+                                    <div class="col-sm-12 col-md-10">
+                                        <input class="form-control form-control-sm form-control-line" type="text" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-12 col-md-2 col-form-label">To</label>
+                                    <div class="col-sm-12 col-md-10">
+                                        <input class="form-control form-control-sm form-control-line" type="text" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-12 col-md-2 col-form-label">Subject</label>
+                                    <div class="col-sm-12 col-md-10">
+                                        <input class="form-control form-control-sm form-control-line" type="text" />
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <button class="btn btn-primary">Search</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="dashboard-setting user-notification">
+                <div class="dropdown">
+                    <a class="dropdown-toggle no-arrow" href="javascript:;" data-toggle="right-sidebar">
+                        <i class="dw dw-settings2"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="user-notification">
+                <div class="dropdown">
+                    <a class="dropdown-toggle no-arrow" href="#" role="button" data-toggle="dropdown">
+                        <i class="icon-copy dw dw-notification"></i>
+                        <span class="badge notification-active"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <div class="notification-list mx-h-350 customscroll">
+                            <ul>
+                                <li>
+                                    <a href="#">
+                                        <img src="vendors/images/img.jpg" alt="" />
+                                        <h3>John Doe</h3>
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                                            elit, sed...
+                                        </p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <img src="vendors/images/photo1.jpg" alt="" />
+                                        <h3>Lea R. Frith</h3>
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                                            elit, sed...
+                                        </p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <img src="vendors/images/photo2.jpg" alt="" />
+                                        <h3>Erik L. Richards</h3>
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                                            elit, sed...
+                                        </p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <img src="vendors/images/photo3.jpg" alt="" />
+                                        <h3>John Doe</h3>
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                                            elit, sed...
+                                        </p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <img src="vendors/images/photo4.jpg" alt="" />
+                                        <h3>Renee I. Hansen</h3>
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                                            elit, sed...
+                                        </p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <img src="vendors/images/img.jpg" alt="" />
+                                        <h3>Vicki M. Coleman</h3>
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                                            elit, sed...
+                                        </p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="user-info-dropdown">
+                <div class="dropdown">
+                    <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                        <span class="user-icon">
+                            <img src="vendors/images/photo1.jpg" alt="" id="usericon" />
+                        </span>
+                        <span class="user-name" id="username">Ross C. Lopez</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
+                        <a class="dropdown-item" href="profile.html"><i class="dw dw-user1"></i> Profile</a>
+                        <a class="dropdown-item" href="profile.html"><i class="dw dw-settings2"></i> Setting</a>
+                        <a class="dropdown-item" href="faq.html"><i class="dw dw-help"></i> Help</a>
+                        <a class="dropdown-item" onclick="logout()"><i class="dw dw-logout"></i> Log Out</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="right-sidebar">
+        <div class="sidebar-title">
+            <h3 class="weight-600 font-16 text-blue">
+                Layout Settings
+                <span class="btn-block font-weight-400 font-12">User Interface Settings</span>
+            </h3>
+            <div class="close-sidebar" data-toggle="right-sidebar-close">
+                <i class="icon-copy ion-close-round"></i>
+            </div>
+        </div>
+        <div class="right-sidebar-body customscroll">
+            <div class="right-sidebar-body-content">
+                <h4 class="weight-600 font-18 pb-10">Header Background</h4>
+                <div class="sidebar-btn-group pb-30 mb-10">
+                    <a href="javascript:void(0);" class="btn btn-outline-primary header-white active">White</a>
+                    <a href="javascript:void(0);" class="btn btn-outline-primary header-dark">Dark</a>
+                </div>
+
+                <h4 class="weight-600 font-18 pb-10">Sidebar Background</h4>
+                <div class="sidebar-btn-group pb-30 mb-10">
+                    <a href="javascript:void(0);" class="btn btn-outline-primary sidebar-light">White</a>
+                    <a href="javascript:void(0);" class="btn btn-outline-primary sidebar-dark active">Dark</a>
+                </div>
+
+                <h4 class="weight-600 font-18 pb-10">Menu Dropdown Icon</h4>
+                <div class="sidebar-radio-group pb-10 mb-10">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebaricon-1" name="menu-dropdown-icon" class="custom-control-input"
+                            value="icon-style-1" checked="" />
+                        <label class="custom-control-label" for="sidebaricon-1"><i class="fa fa-angle-down"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebaricon-2" name="menu-dropdown-icon" class="custom-control-input"
+                            value="icon-style-2" />
+                        <label class="custom-control-label" for="sidebaricon-2"><i class="ion-plus-round"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebaricon-3" name="menu-dropdown-icon" class="custom-control-input"
+                            value="icon-style-3" />
+                        <label class="custom-control-label" for="sidebaricon-3"><i
+                                class="fa fa-angle-double-right"></i></label>
+                    </div>
+                </div>
+
+                <h4 class="weight-600 font-18 pb-10">Menu List Icon</h4>
+                <div class="sidebar-radio-group pb-30 mb-10">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-1" name="menu-list-icon" class="custom-control-input"
+                            value="icon-list-style-1" checked="" />
+                        <label class="custom-control-label" for="sidebariconlist-1"><i
+                                class="ion-minus-round"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-2" name="menu-list-icon" class="custom-control-input"
+                            value="icon-list-style-2" />
+                        <label class="custom-control-label" for="sidebariconlist-2"><i class="fa fa-circle-o"
+                                aria-hidden="true"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-3" name="menu-list-icon" class="custom-control-input"
+                            value="icon-list-style-3" />
+                        <label class="custom-control-label" for="sidebariconlist-3"><i class="dw dw-check"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-4" name="menu-list-icon" class="custom-control-input"
+                            value="icon-list-style-4" checked="" />
+                        <label class="custom-control-label" for="sidebariconlist-4"><i
+                                class="icon-copy dw dw-next-2"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-5" name="menu-list-icon" class="custom-control-input"
+                            value="icon-list-style-5" />
+                        <label class="custom-control-label" for="sidebariconlist-5"><i
+                                class="dw dw-fast-forward-1"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-6" name="menu-list-icon" class="custom-control-input"
+                            value="icon-list-style-6" />
+                        <label class="custom-control-label" for="sidebariconlist-6"><i class="dw dw-next"></i></label>
+                    </div>
+                </div>
+
+                <div class="reset-options pt-30 text-center">
+                    <button class="btn btn-danger" id="reset-settings">
+                        Reset Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="left-side-bar">
+        <div class="brand-logo">
+            <a href="index.html">
+                <img src="vendors/images/FigureFrienzy.png" alt="" class="dark-logo" />
+                <img src="vendors/images/deskapp-logo-white.svg" alt="" class="light-logo" />
+            </a>
+            <div class="close-sidebar" data-toggle="left-sidebar-close">
+                <i class="ion-close-round"></i>
+            </div>
+        </div>
+        <div class="menu-block customscroll">
+            <div class="sidebar-menu">
+                <ul id="accordion-menu">
+                    <a href="index.html" class="dropdown-toggle">
+                        <span class="micon bi bi-house"></span><span class="mtext">Home</span>
+                    </a>
+                </ul>
+                <ul id="accordion-menu">
+                    <a href="createAuction.html" class="dropdown-toggle">
+                        <span class="micon bi bi-house"></span><span class="mtext">Create Auction</span>
+                    </a>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-menu-overlay"></div>
+
+    <div class="main-container">
+        <div class="pd-ltr-20 xs-pd-20-10">
+            <div class="min-height-200px">
+                <div class="page-header">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="title">
+                                <h4>Profile</h4>
+                            </div>
+                            <nav aria-label="breadcrumb" role="navigation">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item">
+                                        <a href="index.html">Home</a>
+                                    </li>
+                                    <li class="breadcrumb-item active" aria-current="page">
+                                        Create Auction
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-30">
+                        <div class="card-box height-100-p overflow-hidden" id="MainModal">
+
+                            <!-- Tasks Tab End -->
+                            <!-- Setting Tab start -->
+
+                            <div class="profile-setting" id="Auction">
+
+                                <ul class="profile-edit-list row">
+                                    <li class="weight-500 col-md-12">
+                                        <h4 class="text-blue h5 mb-20">
+                                            Create your Auction
+                                            <button type="button" class="btn btn-light margin-5" data-toggle="tooltip"
+                                                data-placement="top" title="Start Price or FinalizePrice can be null">
+                                                ?
+                                            </button>
+
+                                        </h4>
+
+                                        <div class="form-group">
+                                            <label>Price Mode</label>
+                                            <select class="form-select" id="priceMode">
+                                                <option value="false">Default</option>
+                                                <option value="true">Custom</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>StarPrice</label>
+                                            <input class="form-control form-control-lg" type="number" id="StarPrice" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>FinalizePrice</label>
+                                            <input class="form-control form-control-lg" type="email"
+                                                id="FinalizePrice" />
+                                        </div>
+                                        <div class="form-group" hidden id="CardStepPrice">
+                                            <label>StepPrice</label>
+                                            <input class="form-control form-control-lg" type="number" id="StepPrice" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>StarTime</label>
+                                            <input class="form-control form-control-lg " type="datetime-local"
+                                                id="StarTime" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>EndTime</label>
+                                            <input class="form-control form-control-lg " type="datetime-local"
+                                                id="EndTime" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <select class="form-select" aria-label="Default select example"
+                                                id="category">
+                                            </select>
+                                        </div>
+
+
+                                        <div class="form-group">
+
+                                            <button type="button" class="btn btn-primary form-control text-center "
+                                                id="AddItem" onclick="createAuction()">Next</button>
+                                        </div>
+
+                                        <!-- <div class="form-group mb-0">
+                                            <a class="btn btn-success" onclick="Update()">Update</a>
+                                        </div> -->
+                                    </li>
+
+                                </ul>
+
+
+                            </div>
+                            <!-- Setting Tab End -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <!-- <div class="main-container" id="AddAution" style="display: none;">
+        <div class="pd-ltr-20 xs-pd-20-10">
+            <div class="min-height-200px">
+
+                <div class="row">
+
+                    <div class="col-xl-12 col-lg-8 col-md-8 col-sm-12 mb-30">
+                        <div class="card-box height-100-p overflow-hidden"> -->
+
+    <!-- Tasks Tab End -->
+    <!-- Setting Tab start -->
+
+    <div class="profile-setting" id="AddAution" style="display: none;">
+
+        <ul class="profile-edit-list row">
+            <li class="weight-500 col-md-12">
+                <h4 class="text-blue h5 mb-4">Add Item</h4>
+
+                <!-- Add Item Button -->
+                <div class="row align-items-center mb-4">
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                            <strong>+</strong> Add
+                        </button>
+                    </div>
+                    <div class="col">
+                        <!-- Optional space for instructions, or can remove -->
+                    </div>
+                </div>
+
+                <!-- Items Container -->
+                <div class="row clearfix mb-4" id="itemsContainer">
+                    <!-- Dynamic items will appear here -->
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="row justify-content-between">
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-secondary" id="BackToAution">
+                            ← Back
+                        </button>
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-primary" id="nextTosummary">
+                            Next →
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+    </div>
+
+
+    <!-- Summary -->
+    <div class="invoice-wrap" id="summary" style="display: none;">
+        <div class="invoice-box">
+            <div class="invoice-header">
+                <div class="logo text-center">
+                    <img src="vendors/images/deskapp-logo.png" alt="" />
+                </div>
+            </div>
+            <h4 class="text-center mb-30 weight-600">Summary</h4>
+            <div class="row pb-30" id="auctionInfo">
+                <!-- <div class="col-md-6">
+                    <h5 class="mb-15">FigureFrienzy</h5>
+                    <p class="font-14 mb-5">
+                        Date Start: <strong class="weight-600"></strong>
+                    </p>
+                    <p class="font-14 mb-5">
+                        Date End: <strong class="weight-600"></strong>
+                    </p>
+                    <p class="font-14 mb-5">
+                        Auction No: <strong class="weight-600"></strong>
+                    </p>
+                    <p class="font-14 mb-5">
+                        Start Price: <strong class="weight-600"></strong>
+                    </p>
+                </div> -->
+
+            </div>
+            <div class="invoice-desc pb-30">
+                <div class="invoice-desc-head clearfix">
+                    <div class="invoice-sub">Item Name</div>
+                    <div class="invoice-rate">Description</div>
+                    <div class="invoice-subtotal">Image</div>
+
+                </div>
+                <div class="invoice-desc-body">
+                    <ul id="itemListContainer">
+
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-2 col-sm-2">
+                    <button type="button" class="btn btn-secondary" id="BackToItem">
+                        ← Back
+                    </button>
+                </div>
+                <div class="col-lg-8 col-sm-0"></div>
+                <div class="col-lg-2 col-sm-2">
+                    <!-- <div class="form-group">
+
+                        <button type="button" class="btn btn-primary form-control text-center " id="CreateAuction"
+                            onclick="Create(itemsList)">Create</button>
+                    </div> -->
+                    <button type="button" class="btn btn-primary" id="CreateAuction" onclick="Create(itemsList)">
+                        Create
+                    </button>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Add preview image Modal-->
+    <div id="lightbox"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000;">
+        <button class="btn btn-light" onclick="prevImage()" style="position: absolute; left: 10%; top: 50%;">⬅</button>
+        <img id="lightbox-image" style="max-width: 80%; max-height: 80%;" />
+        <button class="btn btn-light" onclick="nextImage()" style="position: absolute; right: 10%; top: 50%;">➡</button>
+        <button class="btn btn-danger" onclick="closeLightbox()"
+            style="position: absolute; top: 10px; right: 10px;">✖</button>
+    </div>
+
+    <!-- Add Item Modal-->
+    <div class="modal fade z" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <!-- Centering Wrapper -->
+            <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+display: flex; align-items: center; justify-content: center; 
+background-color: rgba(0, 0, 0, 0.5); z-index: 1050;">
+
+                <div class="modal-content" style="max-width: 600px; width: 100%;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>NameOfProDuct</label>
+                            <input class="form-control form-control-lg" type="text" id="name" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input class="form-control form-control-lg" type="text" id="des" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="files">Upload Image</label>
+                            <input type="file" id="file" multiple="multiple"
+                                accept="image/jpeg, image/png, image/jpg" />
+                            <div id="preview-container"></div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="addItem()">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- This JS just only solve switch page -->
+
+    <script>
+
+        const modal = document.getElementById("AddItem");
+        var validAuction = false;
+        modal.addEventListener("click", function () {
+            var test = createAuction();
+            if (validAuction == false)
+                return;
+
+            document.getElementById("Auction").style.display = "none";
+            document.getElementById("summary").style.display = "none";
+            let addAution = document.getElementById("AddAution");
+            let target = document.getElementById("MainModal");
+            target.appendChild(addAution);
+            addAution.style.display = "block";
+        });
+
+        const back = document.getElementById("BackToAution");
+
+        back.addEventListener("click", function () {
+            document.getElementById("Auction").style.display = "block";
+            document.getElementById("AddAution").style.display = "none";
+        });
+
+
+        const next = document.getElementById("nextTosummary");
+        next.addEventListener("click", function () {
+            document.getElementById("AddAution").style.display = "none";
+            let summary = document.getElementById("summary");
+            let target = document.getElementById("MainModal");
+            target.appendChild(summary);
+            summary.style.display = "block";
+        });
+
+        const backtoItem = document.getElementById("BackToItem");
+        backtoItem.addEventListener("click", function () {
+            document.getElementById("AddAution").style.display = "block";
+            document.getElementById("summary").style.display = "none";
+        });
+    </script>
+    <!-- this script make for store information about Auction -->
+    <script>
+        function createAuction() {
+            var mode = document.getElementById("priceMode").value;
+            if (mode === "false") {
+                var startPrice = document.getElementById("StarPrice").value;
+                var finalizePrice = document.getElementById("FinalizePrice").value;
+                var StartTime = document.getElementById("StarTime").value;
+                var EndTime = document.getElementById("EndTime").value;
+                var category = document.getElementById("category").value;
+
+                var validStepPrice = (finalizePrice * 50 / 100);
+                if ((startPrice != null || finalizePrice != null) && startPrice <= validStepPrice) {
+
+                    var data = {
+                        startPrice: startPrice,
+                        finalizePrice: finalizePrice,
+                        StartTime: StartTime,
+                        EndTime: EndTime,
+                        category: category,
+                        pricemode: mode
+                    }
+                    if (data != null) {
+                        localStorage.setItem("Auction", JSON.stringify(data));
+                        validAuction = true;
+                    } else {
+                        console.log("Data is null");
+                    }
+                } else {
+                    toastr.error("You must enter at least exist StarPirce and FinalPrice, but startPrice not allow bigger than 50% finalPrice");
+                    validAuction = false;
+                }
+
+
+            } else {
+                var startPrice = document.getElementById("StarPrice").value;
+                var finalizePrice = document.getElementById("FinalizePrice").value;
+                var StepPrice = document.getElementById("StepPrice").value;
+                var StartTime = document.getElementById("StarTime").value;
+                var EndTime = document.getElementById("EndTime").value;
+                var category = document.getElementById("category").value;
+
+
+                if (startPrice <= (finalizePrice * 50 / 100) && StepPrice > startPrice / 100 && StepPrice <= (startPrice * 50 / 100)) {
+                    var data = {
+                        startPrice: startPrice,
+                        finalizePrice: finalizePrice,
+                        StartTime: StartTime,
+                        EndTime: EndTime,
+                        category: category,
+                        StepPrice: StepPrice,
+                        pricemode: mode
+                    }
+                    if (data != null) {
+                        localStorage.setItem("Auction", JSON.stringify(data));
+                        validAuction = true;
+                    } else {
+                        console.log("Data is null");
+                    }
+                } else {
+                    toastr.error("You must to check about StepPrice and StartPrice are suitable or not ?");
+                    validAuction = false;
+                }
+
+
+            }
+
+
+        }
+    </script>
+
+    <!-- this script make for summary Auction -->
+    <script>
+
+
+        function renderItems(itemList) {
+            const container = document.getElementById("itemListContainer");
+            const auctionData = JSON.parse(localStorage.getItem("Auction"));
+            if (auctionData.finalizePrice.value == null) {
+                empty = 0;
+                const auctionInfo = document.getElementById("auctionInfo");
+                auctionInfo.innerHTML = `
+                         <div class="col-md-6">
+                    <h5 class="mb-15">FigureFrienzy</h5>
+                    <p class="font-14 mb-5">
+                        Date Start: ${auctionData.StartTime} <strong class="weight-600"></strong>
+                    </p>
+                    <p class="font-14 mb-5">
+                        Date End:  ${auctionData.EndTime}<strong class="weight-600"></strong>
+                    </p>
+                    <p class="font-14 mb-5">
+                        Start Price:  ${auctionData.startPrice} <strong class="weight-600"></strong>
+                    </p>
+                      <p class="font-14 mb-5">
+                        Step Price:  ${auctionData.StepPrice} <strong class="weight-600"></strong>
+                    </p>
+                  
+                </div>
+                        `;
+            } else {
+                const auctionInfo = document.getElementById("auctionInfo");
+                auctionInfo.innerHTML = `
+                         <div class="col-md-6">
+                    <h5 class="mb-15">FigureFrienzy</h5>
+                    <p class="font-14 mb-5">
+                        Date Start: ${auctionData.StartTime} <strong class="weight-600"></strong>
+                    </p>
+                    <p class="font-14 mb-5">
+                        Date End:  ${auctionData.EndTime}<strong class="weight-600"></strong>
+                    </p>
+                
+                    <p class="font-14 mb-5">
+                        Start Price:  ${auctionData.startPrice} <strong class="weight-600"></strong>
+                    </p>
+                    <p class="font-14 mb-5">
+                        Start Price:  ${auctionData.finalizePrice} <strong class="weight-600"></strong>
+                    </p>
+                </div>
+                        `;
+            }
+
+
+            container.innerHTML = ""; // Clear existing content
+            if (itemList == null) {
+                return;
+            }
+            itemList.forEach((item, index) => {
+                const listItem = document.createElement("li");
+                listItem.classList.add("clearfix");
+
+                let hiddenImages = [];
+                let imagesHTML = "";
+                if (item.Files && item.Files.length > 0) {
+                    for (let i = 0; i < item.Files.length; i++) {
+                        var imageURL = URL.createObjectURL(item.Files[i]);
+                        if (i < 1) {
+                            //show only first two picture
+                            imagesHTML += `<img src="${imageURL}" alt="Product Image" class="preview-img" style="max-width: 100px; margin-right: 5px;">`;
+
+                        } else {
+                            // Store hidden images
+                            hiddenImages.push(imageURL);
+                        }
+                    }
+                }
+
+                let viewMoreButton = hiddenImages.length > 0 ?
+                    `<div class="text-center mb-3">
+                        <button class="btn btn-outline-primary btn-sm view-more-btn" onclick="openLightbox(${index})">
+                            <i class="bi bi-images"></i> View More
+                        </button>
+                    </div>` : "";
+
+                listItem.innerHTML = `
+                        <div class="invoice-sub">${item.NameOfProduct}</div>
+                        <div class="invoice-rate">${item.Description}</div>
+                        <div class="invoice-subtotal">
+                             ${imagesHTML}
+                        </div>
+                        ${viewMoreButton}
+                    `;
+
+                container.appendChild(listItem);
+            });
+        }
+
+        renderItems();
+    </script>
+
+    <script>
+        var itemsList = []; // Store all items
+
+        function addItem() {
+            var nameInput = document.getElementById("name");
+            var desInput = document.getElementById("des");
+            var files = document.getElementById("file").files;
+            var itemsContainer = document.getElementById("itemsContainer");
+
+            if (nameInput && desInput && files) {
+                var ListItem = {
+                    NameOfProduct: nameInput.value,
+                    Description: desInput.value,
+                    Files: files
+                };
+
+                itemsList.push(ListItem); // Add item to array
+
+                // updateUI(); // Refresh the displayed list
+                console.log("Item added:", ListItem);
+                console.log("All items:", itemsList);
+                updateUI();
+                renderItems(itemsList);
+                // Clear input fields
+                ListItem = null;
+                document.getElementById("name").value = "";
+                document.getElementById("des").value = "";
+                //document.getElementById("file").value = "";
+                document.querySelector("#preview-container").innerHTML = "";
+                $("#exampleModal").modal("hide");
+            } else {
+                console.error("One or more elements are missing.");
+            }
+        }
+
+
+        function updateUI() {
+            var itemsContainer = document.getElementById("itemsContainer");
+            // itemsContainer.innerHTML = ""; // Clear previous content
+            itemsContainer.innerHTML = "";
+            itemsList.forEach((item, index) => {
+                var itemDiv = document.createElement("div");
+                itemDiv.classList.add("col-lg-3");
+                itemDiv.classList.add("col-md-4");
+                itemDiv.classList.add("col-sm-6");
+                itemDiv.classList.add("mb-30");
+
+                let hiddenImages = [];
+                let imagesHTML = "";
+                if (item.Files && item.Files.length > 0) {
+                    for (let i = 0; i < item.Files.length; i++) {
+                        var imageURL = URL.createObjectURL(item.Files[i]);
+                        if (i < 2) {
+                            //show only first two picture
+                            imagesHTML += `<img src="${imageURL}" alt="Product Image" class="preview-img" style="max-width: 100px; margin-right: 5px;">`;
+
+                        } else {
+                            // Store hidden images
+                            hiddenImages.push(imageURL);
+                        }
+                    }
+                }
+                // "View More" button if there are hidden images
+                let viewMoreButton = hiddenImages.length > 0 ?
+                    `<div class="text-center mb-3">
+                        <button class="btn btn-outline-primary btn-sm view-more-btn" onclick="openLightbox(${index})">
+                            <i class="bi bi-images"></i> View More
+                        </button>
+                    </div>` : "";
+
+                itemDiv.innerHTML = `
+                                                <div class="card shadow-sm border-0 rounded-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <!-- Product Title -->
+        <h5 class="card-title fw-bold text-primary m-0">${item.NameOfProduct}</h5>
+        
+        <!-- Remove Button with X Icon -->
+        <button class="btn btn-danger btn-sm" onclick="removeItem(${index})">
+            <i class="bi bi-x"></i>
+        </button>
+    </div>
+    
+    <div class="card-body">
+        <!-- Product Description -->
+        <p class="card-text text-muted">${item.Description}</p>
+
+        <!-- Image Container -->
+        <div class="image-container mb-3 d-flex justify-content-center">
+            ${imagesHTML}
+        </div>
+
+        <!-- View More Button with Center Alignment -->
+        <div class="text-center mb-3">
+            ${viewMoreButton}
+        </div>
+
+        <!-- Result Section -->
+        <div id="result" class="d-flex gap-2 py-2 justify-content-center"></div>
+    </div>
+</div>
+
+
+                                     
+                `;
+
+                itemsContainer.appendChild(itemDiv);
+                // Store images for lightbox
+                item.hiddenImages = hiddenImages;
+
+            });
+
+        }
+        // Lightbox logic
+        let currentImageIndex = 0;
+        let currentImageList = [];
+
+        function openLightbox(index) {
+
+            currentImageList = Array.from(itemsList[index].Files).map(file => URL.createObjectURL(file));
+            currentImageIndex = 0;
+            updateLightbox();
+            document.getElementById("lightbox").style.display = "flex";
+        }
+
+        function updateLightbox() {
+            let lightboxImage = document.getElementById("lightbox-image");
+
+            if (currentImageList.length > 0) {
+                lightboxImage.src = currentImageList[currentImageIndex];
+            }
+        }
+
+        function nextImage() {
+            if (currentImageIndex < currentImageList.length - 1) {
+                currentImageIndex++;
+                updateLightbox();
+            }
+        }
+
+        function prevImage() {
+            if (currentImageIndex > 0) {
+                currentImageIndex--;
+                updateLightbox();
+            }
+        }
+
+        function closeLightbox() {
+            document.getElementById("lightbox").style.display = "none";
+        }
+
+
+        function removeItem(index) {
+            itemsList.splice(index, 1); // Remove item from array
+            updateUI(); // Refresh the list
+        }
+
+
+    </script>
+
+    <!--Call API to create an Auction-->
+    <script>
+
+        async function Create(itemList) {
+            var token = localStorage.getItem("TOKEN");
+            var auctionInfo = JSON.parse(localStorage.getItem("Auction"));
+            var auctionData = [];
+            var categoryId = auctionInfo.category;
+            var auctionurl = `http://localhost:5114/api/Auction/CreateAuction?categoryId=${categoryId}`
+            if (auctionInfo.pricemode == "true") {
+                auctionData = {
+                    "startPrice": auctionInfo.startPrice,
+                    "finalizePrice": auctionInfo.finalizePrice,
+                    "startTime": auctionInfo.StartTime,
+                    "endTime": auctionInfo.EndTime,
+                    "customStepPrice": true,
+                    "stepPrice": auctionInfo.StepPrice
+
+                }
+            } else {
+                auctionData = {
+                    "startPrice": auctionInfo.startPrice,
+                    "finalizePrice": auctionInfo.finalizePrice,
+                    "startTime": auctionInfo.StartTime,
+                    "endTime": auctionInfo.EndTime,
+                    "customStepPrice": false,
+
+                }
+            }
+
+
+            console.log(auctionData)
+            let auctionresponse = await fetch(auctionurl, {
+                method: 'POST',
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": 'application/json; charset=UTF-8'
+                },
+                body: JSON.stringify(auctionData)
+            })
+            console.log(auctionresponse)
+            //get AuctionId after fetch API
+
+            auctionresponse = await auctionresponse.text();
+
+
+            for (const item of itemList) {
+                var data = new FormData(); // Create a new FormData for each item
+
+                // Append files if they exist
+                if (item.Files) {
+                    for (const file of item.Files) {
+                        if (file.name !== "hiddenImages") {
+                            data.append("files", file);
+                        }
+
+                    }
+                }
+
+                // Construct API URL with query parameters
+                var url = `http://localhost:5114/api/Item/CreateItem?NameOfProduct=${item.NameOfProduct}&Description=${item.Description}&AuctionId=${auctionresponse}`;
+
+                try {
+                    let response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            "Authorization": "Bearer " + token
+                        },
+                        body: data
+                    });
+                    console.log("CreateAuction=", response)
+                    if (response.status == 200) {
+                        toastr.success("Auction created successfully");
+                    } else {
+                        toastr.error("Auction created failed", response.statusText);
+                    }
+                    // if (!response.ok) {
+                    //     console.error("Error creating item:", item.NameOfProduct, await response.text());
+                    // } else {
+                    //     console.log("Item created successfully:", item.NameOfProduct);
+                    // }
+                } catch (error) {
+                    toastr.error("Auction created failed");
+                }
+            }
+        }
+    </script>
+
+
+    <script>
+        async function logout() {
+            var token = localStorage.getItem("TOKEN");
+            const url = "http://localhost:5114/api/Account/Logout";
+            var response = await fetch(url,
+                {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": 'application/json; charset=UTF-8'
+                    },
+
+                });
+            if (response.status == 200) {
+                localStorage.removeItem("TOKEN");
+                window.location.href = "login.html";
+
+            } else {
+                toastr.error('something went wrong')
+            }
+        }
+    </script>
+
+    <script>
+        document.getElementById("file").addEventListener("change", function (event) {
+            const files = event.target.files;
+            const previewContainer = document.getElementById("preview-container");
+
+            previewContainer.innerHTML = ""; // Clear previous images
+
+            if (files.length > 0) {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if (file.type.startsWith("image/")) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const img = document.createElement("img");
+                            img.src = e.target.result;
+                            img.classList.add("image-preview");
+                            previewContainer.appendChild(img);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+
+                // Show scrollbar if more than two images
+                previewContainer.style.overflowX = files.length > 2 ? "auto" : "hidden";
+            }
+        });
+    </script>
+
+
+    <script>
+        window.addEventListener("load", async function () {
+            var result = await CheckToken();
+            console.log(result);
+            if (result) {
+
+                await getCategory();
+                await getData();
+            } else {
+                window.location.href = "login.html";
+            }
+            var auctionInfo = localStorage.getItem("Auction");
+            if (auctionInfo) {
+                let auctionObj = JSON.parse(auctionInfo)
+                document.getElementById("StarPrice").value = auctionObj.startPrice || "";
+                document.getElementById("FinalizePrice").value = auctionObj.finalizePrice || "";
+                document.getElementById("StarTime").value = auctionObj.StartTime || "";
+                document.getElementById("EndTime").value = auctionObj.EndTime || "";
+                var Category = document.getElementById("category");
+                var selectedCate = auctionObj.category;
+                if (Category) {
+                    Category.value = selectedCate;
+
+                    let selectedOption = Category.options[Category.selectedIndex];
+                }
+            }
+
+        });
+
+
+        async function CheckToken() {
+            var token = localStorage.getItem("TOKEN");
+            const url = "http://localhost:5114/api/Account/CheckToken";
+            var response = await fetch(url,
+                {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": 'application/json; charset=UTF-8'
+                    }
+                });
+            if (response.status == 200) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    </script>
+
+    <script>
+        document.getElementById("priceMode").addEventListener("change", function () {
+            let mode = this.value;
+            console.log("test", mode)
+            let stepPriceInput = document.getElementById("CardStepPrice");
+            let finalizePriceInput = document.getElementById("FinalizePrice");
+            if (mode === "true") {
+                stepPriceInput.removeAttribute("hidden", "");
+            } else stepPriceInput.setAttribute("hidden", "");
+        });
+    </script>
+
+    <script>
+        async function getCategory() {
+            var token = localStorage.getItem("TOKEN");
+
+            const url = "http://localhost:5114/api/Category/Activation";
+
+            var response = await fetch(url,
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }
+            )
+            if (response.ok) {
+                const json = await response.json();
+                console.log(json);
+                const tableBody = document.getElementById("category");
+                tableBody.innerHTML = ""; // Clear previous content
+                tableBody.innerHTML = " <option selected hidden>Open this select menu</option>"
+                for (var i = 0; i < json.length; i++) {
+                    const row = `<option value="${json[i].id}">${json[i].name}</option>`;
+
+                    tableBody.innerHTML += row;
+
+                }
+            }
+        }
+
+    </script>
+
+    <script>
+        //This js to get avartar of owner
+        async function getData() {
+            var token = localStorage.getItem("TOKEN");
+
+            const url = "http://localhost:5114/api/User";
+
+            var response = await fetch("http://localhost:5114/api/User",
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }
+            )
+
+            if (response.ok) {
+                const json = await response.json();
+
+                const usericon = document.getElementById("usericon");
+                const userName = document.getElementById("username");
+
+                if (json.imgUrl != null) {
+                    let filename = json.imgUrl.split("/").pop();
+                    let imgSrc = await fetchImage(filename, token);
+
+                    usericon.src = imgSrc;
+                }
+
+                const name = `${json.fullName}`;
+
+                userName.innerHTML = name;
+
+            }
+        }
+
+        async function fetchImage(filename, token) {
+            try {
+                const url = `http://localhost:5114/api/Image/Document/${filename}`;
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": "application/json; charset=UTF-8",
+                    }
+                });
+                if (!response.ok) throw new Error("Failed to fetch image");
+
+                return `data:image/png;base64,${await response.text()}`;
+            } catch (error) {
+                console.error("Error fetching image:", error);
+                return "";
+            }
+        }
+
+
+    </script>
+    <script src="vendors/scripts/core.js"></script>
+    <script src="vendors/scripts/script.min.js"></script>
+    <script src="vendors/scripts/process.js"></script>
+    <script src="vendors/scripts/layout-settings.js"></script>
+    <script src="src/plugins/cropperjs/dist/cropper.js"></script>
+    <script src="
+https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js
+"></script>
+
+</body>
+
+</html>

@@ -22,7 +22,7 @@ namespace FigurineFrenzy.Controllers
         private readonly IItemService _item;
         private readonly IImgService _img;
         private readonly IHubContext<AuctionHubService> _auctionhub;
-        public AuctionController (ITokenService token, IAuctionService auction,IItemService item,IImgService img, IHubContext<AuctionHubService> auctionhub)
+        public AuctionController(ITokenService token, IAuctionService auction, IItemService item, IImgService img, IHubContext<AuctionHubService> auctionhub)
         {
             _token = token;
             _auction = auction;
@@ -33,7 +33,7 @@ namespace FigurineFrenzy.Controllers
 
         [Authorize(Roles = "User")]
         [HttpPost("CreateAuction")]
-        public async Task<IActionResult> Create(string categoryId,[FromBody] CreateAuctionViewModel createAuctionView)
+        public async Task<IActionResult> Create(string categoryId, [FromBody] CreateAuctionViewModel createAuctionView)
         {
             string header = Request.Headers["Authorization"].ToString();
             if (header != null && header.Length > 0)
@@ -44,12 +44,17 @@ namespace FigurineFrenzy.Controllers
                     var checkToken = await _token.CheckTokenAsync(token);
                     if (checkToken != null && checkToken.Role == "User")
                     {
-                        var createAuction = await _auction.CreateAsync(checkToken.AccountId, createAuctionView, categoryId);
-                        if (createAuction != null)
+                        try
                         {
-                            return Ok(createAuction.AuctionId);
+                            var createAuction = await _auction.CreateAsync(checkToken.AccountId, createAuctionView, categoryId);
+                            await _auctionhub.Clients.All.SendAsync("ReceiveNewAuctionAlert");
+                                return Ok(createAuction.AuctionId);
                         }
-                        else return StatusCode(500, "Can't Create Auction");
+                        catch (ArgumentException ex)
+                        {
+                            return BadRequest(ex.Message);
+                        }
+                     
                     }
                     else return Unauthorized();
                 }
@@ -100,10 +105,10 @@ namespace FigurineFrenzy.Controllers
                     if (checkToken != null && checkToken.Role == "Admin" || checkToken.Role == "User")
                     {
                         List<GetInfroAuctionViewModel> listAuction = await _auction.GetAllLiveAuctionAsync();
-                        
+
                         if (listAuction != null)
                         {
-                           return Ok(listAuction);
+                            return Ok(listAuction);
 
                         }
                         else return StatusCode(400, "Can't Get List Aution");
@@ -159,8 +164,8 @@ namespace FigurineFrenzy.Controllers
                     var checkToken = await _token.CheckTokenAsync(token);
                     if (checkToken != null && checkToken.Role == "Admin" || checkToken.Role == "User")
                     {
-                        var result = await _auction.CompletedAsync(AuctionId);  
-                        if(result == "Live" || result == "Ended" )
+                        var result = await _auction.CompletedAsync(AuctionId);
+                        if (result == "Live" || result == "Ended")
                         {
                             await _auctionhub.Clients.All.SendAsync("ReceiveAuctionUpdate", new
                             {
@@ -170,9 +175,12 @@ namespace FigurineFrenzy.Controllers
                             return Ok(result);
                         }
                         else return StatusCode(400, "Auction is still lauching");
-                    }else return Unauthorized();
-                }else return Unauthorized();
-            }else return Unauthorized();
+                    }
+                    else return Unauthorized();
+                }
+                else return Unauthorized();
+            }
+            else return Unauthorized();
         }
 
 
@@ -202,5 +210,44 @@ namespace FigurineFrenzy.Controllers
             }
             else return Unauthorized();
         }
+
+        [Authorize(Roles = "User")]
+        [HttpGet("JointOwnerToGroup")]
+        public async Task<IActionResult> JoinAuctionGroup()
+        {
+            string header = Request.Headers["Authorization"].ToString();
+            if (header != null && header.Length > 0)
+            {
+                string token = header.Split(" ")[1];
+                if (token != null)
+                {
+                    var checkToken = await _token.CheckTokenAsync(token);
+                    if (checkToken != null && checkToken.Role == "User")
+                    {
+                        var result = await _auction.GetAllByAccIdAsync(checkToken.AccountId);
+                        if (result != null && result.Count() > 0)
+                        {
+                            foreach (var auction in result)
+                            {
+                                if (auction.Status == "Live")
+                                {
+                                    await _auctionhub.Clients.Groups($"auction_{auction.AuctionId}").SendAsync("ReceiveAuctionBidDetail", auction.AuctionId, auction.OwnerId);
+                                    return Ok(auction);
+                                }
+                            }
+                            return Ok("Now You not have any Auction in progress");
+                        }
+                        else return StatusCode(400, "Can't Update Auction");
+                    }
+                    else return Unauthorized();
+                }
+                else return Unauthorized();
+            }
+            else return Unauthorized();
+        }
+
+
+
+
     }
 }

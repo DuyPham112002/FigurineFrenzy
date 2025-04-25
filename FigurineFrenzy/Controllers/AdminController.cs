@@ -218,6 +218,9 @@ namespace FigurineFrenzy.Controllers
             }
             else
             {
+
+            }
+            {
                 string message = string.Join(" | ", ModelState.Values
                       .SelectMany(v => v.Errors)
                       .Select(e => e.ErrorMessage));

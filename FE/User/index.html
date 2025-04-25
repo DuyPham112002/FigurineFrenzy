@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Basic Page Info -->
+    <meta charset="utf-8" />
+    <title>DeskApp - Bootstrap Admin Dashboard HTML Template</title>
+
+    <!-- Site favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="vendors/images/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="vendors/images/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="vendors/images/favicon-16x16.png" />
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="vendors/styles/core.css" />
+    <link rel="stylesheet" type="text/css" href="vendors/styles/icon-font.min.css" />
+    <link rel="stylesheet" type="text/css" href="src/plugins/cropperjs/dist/cropper.css" />
+    <link rel="stylesheet" type="text/css" href="vendors/styles/style.css" />
+    <link rel="stylesheet" href="vendors/styles/time.css">
+    <link href="
+https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css
+" rel="stylesheet">
+</head>
+
+<body>
+
+
+    <div class="header">
+        <div class="header-left">
+            <div class="menu-icon bi bi-list"></div>
+            <div class="search-toggle-icon bi bi-search" data-toggle="header_search"></div>
+            <div class="header-search">
+                <form>
+                    <div class="form-group mb-0">
+                        <i class="dw dw-search2 search-icon"></i>
+                        <input type="text" class="form-control search-input" placeholder="Search Here" />
+                        <div class="dropdown">
+                            <a class="dropdown-toggle no-arrow" href="#" role="button" data-toggle="dropdown">
+                                <i class="ion-arrow-down-c"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <div class="form-group row">
+                                    <label class="col-sm-12 col-md-2 col-form-label">From</label>
+                                    <div class="col-sm-12 col-md-10">
+                                        <input class="form-control form-control-sm form-control-line" type="text" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-12 col-md-2 col-form-label">To</label>
+                                    <div class="col-sm-12 col-md-10">
+                                        <input class="form-control form-control-sm form-control-line" type="text" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-12 col-md-2 col-form-label">Subject</label>
+                                    <div class="col-sm-12 col-md-10">
+                                        <input class="form-control form-control-sm form-control-line" type="text" />
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <button class="btn btn-primary">Search</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="dashboard-setting user-notification">
+                <div class="dropdown">
+                    <a class="dropdown-toggle no-arrow" href="javascript:;" data-toggle="right-sidebar">
+                        <i class="dw dw-settings2"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="user-notification">
+                <div class="dropdown">
+                    <a class="dropdown-toggle no-arrow" href="#" role="button" data-toggle="dropdown">
+                        <i class="icon-copy dw dw-notification"></i>
+                        <span class="badge notification-active"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <div class="notification-list mx-h-350 customscroll">
+                            <ul>
+                                <li>
+                                    <a href="#">
+                                        <img src="vendors/images/img.jpg" alt="" />
+                                        <h3>John Doe</h3>
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                                            elit, sed...
+                                        </p>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="user-info-dropdown">
+                <div class="dropdown">
+                    <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                        <span class="user-icon">
+                            <img src="vendors/images/photo1.jpg" alt="" id="usericon" />
+                        </span>
+                        <span class="user-name" id="username">Ross C. Lopez</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
+                        <a class="dropdown-item" href="profile.html"><i class="dw dw-user1"></i> Profile</a>
+                        <a class="dropdown-item" href="profile.html"><i class="dw dw-settings2"></i> Setting</a>
+                        <a class="dropdown-item" href="faq.html"><i class="dw dw-help"></i> Help</a>
+                        <a class="dropdown-item" onclick="logout()"><i class="dw dw-logout"></i> Log Out</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="right-sidebar">
+        <div class="sidebar-title">
+            <h3 class="weight-600 font-16 text-blue">
+                Layout Settings
+                <span class="btn-block font-weight-400 font-12">User Interface Settings</span>
+            </h3>
+            <div class="close-sidebar" data-toggle="right-sidebar-close">
+                <i class="icon-copy ion-close-round"></i>
+            </div>
+        </div>
+        <div class="right-sidebar-body customscroll">
+            <div class="right-sidebar-body-content">
+                <h4 class="weight-600 font-18 pb-10">Header Background</h4>
+                <div class="sidebar-btn-group pb-30 mb-10">
+                    <a href="javascript:void(0);" class="btn btn-outline-primary header-white active">White</a>
+                    <a href="javascript:void(0);" class="btn btn-outline-primary header-dark">Dark</a>
+                </div>
+
+                <h4 class="weight-600 font-18 pb-10">Sidebar Background</h4>
+                <div class="sidebar-btn-group pb-30 mb-10">
+                    <a href="javascript:void(0);" class="btn btn-outline-primary sidebar-light">White</a>
+                    <a href="javascript:void(0);" class="btn btn-outline-primary sidebar-dark active">Dark</a>
+                </div>
+
+                <h4 class="weight-600 font-18 pb-10">Menu Dropdown Icon</h4>
+                <div class="sidebar-radio-group pb-10 mb-10">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebaricon-1" name="menu-dropdown-icon" class="custom-control-input"
+                            value="icon-style-1" checked="" />
+                        <label class="custom-control-label" for="sidebaricon-1"><i class="fa fa-angle-down"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebaricon-2" name="menu-dropdown-icon" class="custom-control-input"
+                            value="icon-style-2" />
+                        <label class="custom-control-label" for="sidebaricon-2"><i class="ion-plus-round"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebaricon-3" name="menu-dropdown-icon" class="custom-control-input"
+                            value="icon-style-3" />
+                        <label class="custom-control-label" for="sidebaricon-3"><i
+                                class="fa fa-angle-double-right"></i></label>
+                    </div>
+                </div>
+
+                <h4 class="weight-600 font-18 pb-10">Menu List Icon</h4>
+                <div class="sidebar-radio-group pb-30 mb-10">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-1" name="menu-list-icon" class="custom-control-input"
+                            value="icon-list-style-1" checked="" />
+                        <label class="custom-control-label" for="sidebariconlist-1"><i
+                                class="ion-minus-round"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-2" name="menu-list-icon" class="custom-control-input"
+                            value="icon-list-style-2" />
+                        <label class="custom-control-label" for="sidebariconlist-2"><i class="fa fa-circle-o"
+                                aria-hidden="true"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-3" name="menu-list-icon" class="custom-control-input"
+                            value="icon-list-style-3" />
+                        <label class="custom-control-label" for="sidebariconlist-3"><i class="dw dw-check"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-4" name="menu-list-icon" class="custom-control-input"
+                            value="icon-list-style-4" checked="" />
+                        <label class="custom-control-label" for="sidebariconlist-4"><i
+                                class="icon-copy dw dw-next-2"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-5" name="menu-list-icon" class="custom-control-input"
+                            value="icon-list-style-5" />
+                        <label class="custom-control-label" for="sidebariconlist-5"><i
+                                class="dw dw-fast-forward-1"></i></label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="sidebariconlist-6" name="menu-list-icon" class="custom-control-input"
+                            value="icon-list-style-6" />
+                        <label class="custom-control-label" for="sidebariconlist-6"><i class="dw dw-next"></i></label>
+                    </div>
+                </div>
+
+                <div class="reset-options pt-30 text-center">
+                    <button class="btn btn-danger" id="reset-settings">
+                        Reset Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="left-side-bar">
+        <div class="brand-logo">
+            <a href="index.html">
+                <img src="vendors/images/FigureFrienzy.png" alt="" class="dark-logo" />
+                <img src="vendors/images/deskapp-logo-white.svg" alt="" class="light-logo" />
+            </a>
+            <div class="close-sidebar" data-toggle="left-sidebar-close">
+                <i class="ion-close-round"></i>
+            </div>
+        </div>
+        <div class="menu-block customscroll">
+            <div class="sidebar-menu">
+                <ul id="accordion-menu">
+                    <a href="index.html" class="dropdown-toggle">
+                        <span class="micon bi bi-house"></span><span class="mtext">Home</span>
+                    </a>
+                </ul>
+                <ul id="accordion-menu">
+                    <a href="createAuction.html" class="dropdown-toggle">
+                        <span class="micon bi bi-house"></span><span class="mtext">Create Auction</span>
+                    </a>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-menu-overlay"></div>
+
+    <div class="main-container">
+        <div class="pd-ltr-20 xs-pd-20-10">
+            <!-- With indicators -->
+            <div class="row" id="content-auction">
+                <!-- <div class="col-lg-6 col-md-12 col-sm-12 mb-30" >
+                    
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@8.0.7/dist/browser/signalr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.js"></script>
+
+    <!--This JS use for connect with SignalR to update Realtime Status-->
+
+
+    <!--This JS use for countdown time of Auction -->
+    <script>
+        function startCountdown(timeStart, TimeEnd, index, auctionId) {
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const difference = TimeEnd - now;
+
+                if (difference <= 0) {
+                    document.getElementById("countdown-box").innerHTML = "Auction Ended!";
+                    document.getElementById(`status_${auctionId}`).innerText = "Ended";
+                    document.getElementById(`status_${auctionId}`).classList.remove("btn-danger");
+                    document.getElementById(`status_${auctionId}`).classList.add("btn-secondary");
+                    clearInterval(timer);
+                    return;
+                    updateAuctionStatus();
+                }
+
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById(`days${auctionId}`).innerText = days + " " + "d";
+                document.getElementById(`hours${auctionId}`).innerText = hours + " " + "h";
+                document.getElementById(`minutes${auctionId}`).innerText = minutes + " " + "m";
+                document.getElementById(`seconds${auctionId}`).innerText = seconds + " " + "s";
+            }
+
+            updateCountdown();  // Initial update
+            const timer = setInterval(updateCountdown, 1000);
+        }
+
+        function countdowntoStart(timeStart, TimeEnd, index, auctionId){
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const difference = timeStart - now;
+
+                if (difference <= 0) {
+                    startCountdown(timeStart, TimeEnd, index, auctionId);     
+                }
+
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById(`days${auctionId}`).innerText = days + " " + "d";
+                document.getElementById(`hours${auctionId}`).innerText = hours + " " + "h";
+                document.getElementById(`minutes${auctionId}`).innerText = minutes + " " + "m";
+                document.getElementById(`seconds${auctionId}`).innerText = seconds + " " + "s";
+            }
+
+            updateCountdown();  // Initial update
+            const timer = setInterval(updateCountdown, 1000);
+        }
+
+    </script>
+
+    <script>
+        async function logout() {
+            var token = localStorage.getItem("TOKEN");
+            const url = "http://localhost:5114/api/Account/Logout";
+            var response = await fetch(url,
+                {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": 'application/json; charset=UTF-8'
+                    },
+
+                });
+            if (response.status == 200) {
+                localStorage.removeItem("TOKEN");
+                window.location.href = "login.html";
+
+            } else {
+                toastr.error('something went wrong')
+            }
+        }
+    </script>
+
+    <!-- This code for realtime Bid-->
+    <script>
+
+        // ✅ Connect to SignalR Hub
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://localhost:5114/auctionHubService") // Update based on your backend URL
+            .build();
+
+        // ✅ Listen for real-time bid updates
+        connection.on("ReceiveBidUpdate", async function (data) {
+            // console.log("New bid received:", data);
+            let auctionElement = document.getElementById(`currentPrice_${data.auctionId}`);
+            if (auctionElement) {
+                auctionElement.innerText = "Current Price:" + data.bidAmount + "$";
+            }
+
+        });
+
+        connection.on("UserJoinedAuction", (auctionId, userName) => {
+            console.log(`${userName} has joined auction ${auctionId}`);
+        });
+
+        // connection.on("ReceiveAuctionBidDetail", (auctionId, userName) => {
+        //     // Create the new notification element
+        //     const notificationItem = document.createElement("li");
+        //     notificationItem.innerHTML = `
+        //     <a href="/Auction/Details/${auctionId}">
+        //         <img src="vendors/images/img.jpg" alt="" />
+        //         <h3>${userName}</h3>
+        //         <p>
+        //             just placed a new bid on auction #${auctionId}
+        //         </p>
+        //     </a>
+        // `;
+
+        //     // Append it to the notification list
+        //     const notificationList = document.querySelector(".notification-list ul");
+        //     if (notificationList) {
+        //         notificationList.prepend(notificationItem);
+        //     }
+
+        //     // Show the notification badge if it’s hidden
+        //     const badge = document.querySelector(".notification-active");
+        //     if (badge) {
+        //         badge.style.display = "inline-block"; // or remove `d-none` if using Bootstrap
+        //     }
+        // });
+
+
+
+        // ✅ Start connection
+        connection.start().then(() => {
+            JointUserToGroup();
+            JointOwnerToGroup();
+        }).catch(err => console.error("SignalR Connection Error:", err));
+
+        //Fuction to join owner to Auction
+        async function JointOwnerToGroup() {
+            var token = localStorage.getItem("TOKEN");
+            const url = "http://localhost:5114/api/Auction/JointOwnerToGroup";
+            var response = await fetch(url,
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": 'application/json; charset=UTF-8'
+                    }
+                });
+            if (!response.ok) return;
+            else {
+                var data = await response.json();
+                connection.invoke("JoinAuctionGroup", data.auctionId, data.ownerId)
+                    .then(() => console.log("✅ Joined group:", data.auctionId))
+                console.log("Connected to SignalR Hub");
+            }
+        }
+
+        async function JointUserToGroup() {
+            var token = localStorage.getItem("TOKEN");
+            const url = "http://localhost:5114/api/Bid/JoinToAuction";
+            var response = await fetch(url,
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": 'application/json; charset=UTF-8'
+                    }
+                });
+            if (!response.ok) return;
+            else {
+                var data = await response.json();
+                connection.invoke("JoinAuctionGroup", data.auctionId, data.fullName)
+
+                    .catch(err => console.error(err.toString()));
+            }
+
+        }
+        // ✅ Function to send a test bid using API
+        async function placeBid(auctionId, currentPrice, index) {
+            var bidAmount = document.getElementById(`bidAmount_${auctionId}`).value;
+            var auctionId = document.getElementById(`AuctionId_${auctionId}`).value;
+            var token = localStorage.getItem("TOKEN");
+
+
+            const response = await fetch("http://localhost:5114/api/Bid/CreateBid", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}` // Include token if authentication is required
+                },
+                body: JSON.stringify({
+                    auctionId: auctionId,
+                    bidAmount: bidAmount
+                })
+            });
+
+            const result = await response.text();
+
+            if (response.ok) {
+                toastr.success("Bid placed successfully!");
+                document.getElementById(`bidMessage_${auctionId}`).style.color = "green";
+                document.getElementById(`bidMessage_${auctionId}`).innerText = "Bid placed successfully!";
+                let setCurrentPrice = document.getElementById(`currentPrice_${auctionId}`);
+                setCurrentPrice.hidden = false; 
+                setCurrentPrice.innerText = "Current Price:" + bidAmount + "$";
+            } else {
+                toastr.error("Bid failed: " + result);
+                document.getElementById(`bidMessage_${auctionId}`).style.color = "red";
+                document.getElementById(`bidMessage_${auctionId}`).innerText = "Failed to place bid: " + result;
+            }
+
+        }
+
+
+
+    </script>
+
+
+    <script>
+        window.addEventListener("load", async function () {
+            var result = await CheckToken();
+            if (result) {
+                await getAllAuction()
+                await getData();
+
+            } else {
+                window.location.href = "login.html";
+            }
+
+        });
+
+
+
+        async function CheckToken() {
+            var token = localStorage.getItem("TOKEN");
+            const url = "http://localhost:5114/api/Account/CheckToken";
+            var response = await fetch(url,
+                {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": 'application/json; charset=UTF-8'
+                    }
+                });
+            if (response.status == 200) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+    </script>
+
+    <script>
+        let auctionData = [];
+        async function getAllAuction() {
+            var token = localStorage.getItem("TOKEN");
+            const url = "http://localhost:5114/api/Auction/GetAllAuction";
+            var response = await fetch(url,
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": 'application/json; charset=UTF-8'
+                    }
+                });
+            if (!response.ok) throw new Error("Failed to fetch auction data");
+            const auctionData = await response.json();
+            const container = document.getElementById("content-auction");
+
+            if (auctionData.length == 0) {
+                container.innerHTML = `<h2 style="margin-top: 20px; align-items: center; ">No Auction Available</h2>`;
+            }
+            auctionData.forEach((auction, index) => {
+                renderAllAuction(auction, index, container, token);
+            });
+
+        }
+
+        async function renderAllAuction(auction, index, container, token) {
+            let carouselIndicators = "";
+            let carouselItems = "";
+            let currentPrice = auction.currentPrice;
+
+            const timeStart = new Date(auction.startTime).getTime(); // Convert API time to timestamp
+            const timeEnd = new Date(auction.endTime).getTime(); // Convert API time to timestamp
+            let firstImageSet = false;
+            for (let i = 0; i < auction.items.length; i++) {
+                const imageSetId = auction.items[i].imageSetId;
+                const images = auction.images.filter(img => img.id === imageSetId);
+
+                for (let j = 0; j < images.length; j++) {
+                    let filename = images[j].imgUrl.split("/").pop();
+                    let imgSrc = await fetchImage(filename, token);
+
+                    // Set "active" only for the first image across all items
+                    let isActive = !firstImageSet ? "active" : "";
+                    firstImageSet = true; // Ensure no other images get "active"
+
+                    carouselIndicators += `<li data-target="#carousel${index}" data-slide-to="${j}" class="${isActive}"></li>`;
+                    carouselItems += `
+            <div class="carousel-item ${isActive}" style="width:500px; height:400px">
+                <img src="${imgSrc}" class="d-block w-100" alt="Auction Image"  >
+            </div>
+        `;
+                }
+            }
+
+            let auctionList = `
+        <div class="col-lg-6 col-md-12 col-sm-12 mb-30">
+            <div class="card-box mb-30">
+                 <div class="clearfix pd-20 d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <img src="" alt="Owner Avatar" class="rounded-circle owner-avatar" width="50"  data-owner-id="${auction.ownerId}"
+                                height="50" style="margin-right: 10px;">
+                            <h5 class="mb-0" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">${auction.ownerName}</h5>
+                        </div>
+                        <a href="#carousel3" id="status_${auction.auctionId}" class="btn btn-danger btn-sm scroll-click ml-auto" rel="content-y"
+                            data-toggle="collapse">${auction.status}</a>
+                    </div>
+                <div class="clearfix pd-20">
+                    <div class="pull-left">
+                        <a href="auctionDetail.html?auctionId=${auction.auctionId}">
+                            <h4 id="title_${auction.auctionId}">Auction Countdown Timer</h4>
+                        </a>
+                        <div id="countdown-box">
+                            <span class="time-section" id="days${auction.auctionId}">00</span> |
+                            <span class="time-section" id="hours${auction.auctionId}">00</span> |
+                            <span class="time-section" id="minutes${auction.auctionId}">00</span> |
+                            <span class="time-section" id="seconds${auction.auctionId}">00</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+                    <div id="carousel${index}" class="carousel slide" data-ride="carousel">
+                   
+                        <a class="carousel-control-prev custom-carousel-btn" href="#carousel${index}" role="button" data-slide="prev" style="position: absolute; left: -50px; z-index: 10;">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </a>
+                        <!-- Carousel Container -->
+                        <div id="carousel${index}" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">${carouselIndicators}</ol>
+                            <div class="carousel-inner">${carouselItems}</div>
+                        </div>
+                        <a class="carousel-control-next custom-carousel-btn" href="#carousel${index}" role="button" data-slide="next" style="position: absolute; right: -50px; z-index: 10;">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="pd-20">
+                        <h5 id="startPrice_${auction.auctionId}">Start Price: <span>${auction.startPrice}$</span></h5>
+                        <h5 hidden id="currentPrice_${auction.auctionId}">Current Price: <span>${auction.currentPrice}$</span></h5>
+                    <div class="bid-section">
+                        <input type="text" id="AuctionId_${auction.auctionId}" hidden value="${auction.auctionId}"/>
+                        <input type="number" id="bidAmount_${auction.auctionId}" class="form-control" placeholder="Enter your bid" min="101" />
+                        <button class="btn btn-primary mt-2 text-a" onclick="placeBid('${auction.auctionId}')" style="font-size: 20px; padding: 12px 30px; display: block; margin: 10px auto;">
+                            Place Bid
+                        </button>
+                    </div>
+                    <p id="bidMessage_${auction.auctionId}" style="color: red; margin-top: 5px;"></p>
+                </div>
+            </div>
+        </div>
+    `;
+
+
+
+            container.innerHTML += auctionList;
+            //call fuction to countdown time
+            let timeNow = new Date().getTime(); // Get the current time in milliseconds
+            connection.on("ReceiveAuctionStatus", function (data, status) {
+
+                // Update UI
+                if (status == "Live" && data == auction.auctionId) {
+                    document.getElementById(`status_${data}`).innerText = status;
+                    document.getElementById(`status_${data}`).classList.remove("btn-danger");
+                    document.getElementById(`status_${data}`).classList.add("btn-warning");
+                    document.getElementById(`title_${data}`).innerText = "Auction End In";
+                    startCountdown(timeStart, timeEnd, index, data);
+                } else if (data.status == "Ended") {
+                    document.getElementById(`status_${data}`).innerText = status;
+                    document.getElementById(`status_${data}`).classList.remove("btn-danger");
+                    document.getElementById(`status_${data}`).classList.add("btn-secondary");
+                } else {
+                    return;
+                }
+            });
+            if(auction.status == "NotStart"){
+                document.getElementById(`title_${auction.auctionId}`).innerText = "Auction Will Start In";
+                countdowntoStart(timeStart, timeEnd, index, auction.auctionId);
+            }
+            let startPrice = document.getElementById(`startPrice_${auction.auctionId}`);
+            let setCurrentPrice = document.getElementById(`currentPrice_${auction.auctionId}`);
+            if (auction.currentPrice == null) {
+                setCurrentPrice.hidden = true;
+            } else {
+                startPrice.hidden = true;  // Hide the start price element
+                setCurrentPrice.hidden = false;  // Show the current price element
+            }
+            //load avartar Auction
+            getOwenerAvartar(auction);
+        }
+
+        //getAvartar of Owner of Auction
+
+        async function getOwenerAvartar(auction) {
+            const ownerId = auction.ownerId
+            var avartar_owner = document.querySelectorAll(`.owner-avatar[data-owner-id="${ownerId}"]`);
+            var token = localStorage.getItem("TOKEN");
+
+            var response = await fetch("http://localhost:5114/api/User/GetAuctionOwner?accId=" + ownerId,
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }
+            )
+
+            if (response.ok) {
+
+                const usericon = document.getElementById("usericon");
+                const userName = document.getElementById("username");
+                const json = await response.json();
+                console.log(json);
+                if (json.imgUrl != null) {
+
+
+                    let filename = json.imgUrl.split("/").pop();
+                    let imgSrc = await fetchImage(filename, token);
+
+                    avartar_owner.forEach(avatar => {
+                        avatar.src = imgSrc;
+                    });
+                }
+
+            }
+
+        };
+
+
+
+        async function fetchImage(filename, token) {
+            try {
+                const url = `http://localhost:5114/api/Image/Document/${filename}`;
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": "application/json; charset=UTF-8",
+                    }
+                });
+                if (!response.ok) throw new Error("Failed to fetch image");
+
+                return `data:image/png;base64,${await response.text()}`;
+            } catch (error) {
+                console.error("Error fetching image:", error);
+                return "";
+            }
+        }
+
+        //This js to get avartar of owner
+        async function getData() {
+            var token = localStorage.getItem("TOKEN");
+
+            const url = "http://localhost:5114/api/User";
+
+            var response = await fetch("http://localhost:5114/api/User",
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                }
+            )
+
+            if (response.ok) {
+                const json = await response.json();
+
+                const usericon = document.getElementById("usericon");
+                const userName = document.getElementById("username");
+
+                if (json.imgUrl != null) {
+                    let filename = json.imgUrl.split("/").pop();
+                    let imgSrc = await fetchImage(filename, token);
+
+                    usericon.src = imgSrc;
+                }
+
+                const name = `${json.fullName}`;
+
+                userName.innerHTML = name;
+
+            }
+        }
+
+
+
+    </script>
+
+
+    <script src="vendors/scripts/core.js"></script>
+    <script src="vendors/scripts/script.min.js"></script>
+    <script src="vendors/scripts/process.js"></script>
+    <script src="vendors/scripts/layout-settings.js"></script>
+    <script src="src/plugins/cropperjs/dist/cropper.js"></script>
+    <script src="
+https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js
+"></script>
+
+
+</body>
+
+</html>

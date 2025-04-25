@@ -43,21 +43,45 @@ namespace FigurineFrenzy.Controllers
                     {
                         User getUser = await _user.GetAsync(checkToken.AccountId);
                         var imgProfile = await _account.GetImgAsync(checkToken.AccountId);
-                        UserInfoViewModel userInfo = new UserInfoViewModel
+                        if (imgProfile == null)
                         {
-                            FullName = getUser.FullName,
-                            Address = getUser.Address,
-                            DateOfBirth = getUser.DateOfBirth.Value,
-                            Email = getUser.Email,
-                            Phone = checkToken.Phone,
-                            ImgUrl = imgProfile
+                            UserInfoViewModel userInfo = new UserInfoViewModel
+                            {
+                                FullName = getUser.FullName,
+                                Address = getUser.Address,
+                                DateOfBirth = getUser.DateOfBirth.Value,
+                                Email = getUser.Email,
+                                Phone = checkToken.Phone,
+                                ImgUrl = "Images/download.jpg"
 
-                        };
-                        if (userInfo != null)
-                        {
-                            return Ok(userInfo);
+                            };
+                            if (userInfo != null)
+                            {
+                                return Ok(userInfo);
+                            }
+                            else return StatusCode(500, "Can't Get User Information");
+
                         }
-                        else return NotFound("Can't get User Info");
+                        else
+                        {
+                            UserInfoViewModel userInfo = new UserInfoViewModel
+                            {
+                                FullName = getUser.FullName,
+                                Address = getUser.Address,
+                                DateOfBirth = getUser.DateOfBirth.Value,
+                                Email = getUser.Email,
+                                Phone = checkToken.Phone,
+                                ImgUrl = imgProfile
+
+                            };
+                            if (userInfo != null)
+                            {
+                                return Ok(userInfo);
+                            }
+                            else return StatusCode(500, "Can't Get User Information");
+                        }
+
+
                     }
                     else return Unauthorized();
                 }
@@ -65,6 +89,56 @@ namespace FigurineFrenzy.Controllers
             }
             return Unauthorized();
 
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpGet("GetAuctionOwner")]
+        public async Task<IActionResult> GetAuctionOwner(string accId)
+        {
+            string header = Request.Headers["Authorization"].ToString();
+            if (header != null && header.Length > 0)
+            {
+                string token = header.Split(" ")[1];
+                if (token != null)
+                {
+                    var checkToken = await _token.CheckTokenAsync(token);
+                    if (checkToken != null && checkToken.Role == "User")
+                    {
+                        var getAuctionOwner = await _user.GetAsync(accId);
+                        var imgProfile = await _account.GetImgAsync(accId);
+                        if (getAuctionOwner != null)
+                        {
+                            if (imgProfile == null)
+                            {
+                                UserInfoViewModel userInfo = new UserInfoViewModel
+                                {
+                                    FullName = getAuctionOwner.FullName,
+                                    ImgUrl = "Images/download.jpg"
+
+                                };
+                                return Ok(userInfo);
+                            }
+
+                            //if not have imgUrl use default img
+                            else
+                            {
+                                UserInfoViewModel userInfo = new UserInfoViewModel
+                                {
+                                    FullName = getAuctionOwner.FullName,
+                                    ImgUrl = imgProfile
+
+                                };
+
+                                return Ok(userInfo);
+                            }
+                        }
+                        else return NotFound("Can't get Auction Owner");
+                    }
+                    else return Unauthorized();
+                }
+                else return Unauthorized();
+            }
+            return Unauthorized();
         }
 
         [Authorize(Roles = "User")]
@@ -88,9 +162,9 @@ namespace FigurineFrenzy.Controllers
                             {
                                 return Ok();
                             }
-                            else return StatusCode(500);
+                            else return StatusCode(500,"Update User Information Failed!");
                         }
-                        return StatusCode(500);
+                        return StatusCode(400,"Can not get User Information");
                     }
                     else return Unauthorized();
                 }
@@ -113,77 +187,76 @@ namespace FigurineFrenzy.Controllers
                     if (checkToken != null && checkToken.Role == "User")
                     {
                         var isExistImage = await _account.GetImgAsync(checkToken.AccountId);
-                        if (isExistImage != null)
+                        //Case if avatar exist removed it
+                        if(isExistImage != null)
                         {
-                            //Case if avatar exist removed it
                             var existFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/", isExistImage);
 
-                            if(System.IO.File.Exists(existFilePath))
+                            if (System.IO.File.Exists(existFilePath))
                                 System.IO.File.Delete(existFilePath);
-                            
+                        }
+                       
+                        string[] permittedExtensions = { ".png", ".jpg", ".jepg" };
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            //copy list file into memoryStream
+                            await file.CopyToAsync(memoryStream);
 
-                            string[] permittedExtensions = { ".png", ".jpg", ".jepg" };
-                            using (var memoryStream = new MemoryStream())
+                            string filenames = Path.GetFileName(file.FileName);
+
+                            //check file extension and signature
+                            // Check the content length in case the file's only
+                            // content was a BOM and the content is actually
+                            // empty after removing the BOM.
+
+                            if (memoryStream.Length == 0)
                             {
-                                //copy list file into memoryStream
-                                await file.CopyToAsync(memoryStream);
-
-                                string filenames = Path.GetFileName(file.FileName);
-
-                                //check file extension and signature
-                                // Check the content length in case the file's only
-                                // content was a BOM and the content is actually
-                                // empty after removing the BOM.
-
-                                if (memoryStream.Length == 0)
-                                {
-                                    return StatusCode(404, "Not found any image");
-                                }
-
-                                if (!FileHelper.IsValidFileExtensionAndSignature(filenames, memoryStream, permittedExtensions))
-                                {
-                                    return StatusCode(404, "Only upload file have extentions such as png, jpg, jepg");
-                                }
-
+                                return StatusCode(404, "Not found any image");
                             }
 
-                            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images");
-                            //create folder if not exist
-                            if (!Directory.Exists(path))
+                            if (!FileHelper.IsValidFileExtensionAndSignature(filenames, memoryStream, permittedExtensions))
                             {
-                                Directory.CreateDirectory(path);
+                                return StatusCode(404, "Only upload file have extentions such as png, jpg, jepg");
                             }
 
-                            //change filename
-                            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-                            var filename = Path.GetRandomFileName();
-                            filename = Path.GetRandomFileName();
-                            string fileNameWithPath = Path.Combine(path, filename + ext);
+                        }
 
-                            //save img to Server
-                            using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
-                            {
-                                file.CopyTo(stream);
-                            }
-                            string imageUrl = "Images/" + filename + ext;
-                            //save img metadata to db
-                            bool imageSaved = await _account.UpdateImgAsync(imageUrl, checkToken.AccountId);
+                        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images");
+                        //create folder if not exist
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
 
-                            if (!imageSaved)
-                            {
-                                return BadRequest();
-                            }
+                        //change filename
+                        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+                        var filename = Path.GetRandomFileName();
+                        filename = Path.GetRandomFileName();
+                        string fileNameWithPath = Path.Combine(path, filename + ext);
+
+                        //save img to Server
+                        using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                        {
+                            file.CopyTo(stream);
+                        }
+                        string imageUrl = "Images/" + filename + ext;
+                        //save img metadata to db
+                        bool imageSaved = await _account.UpdateImgAsync(imageUrl, checkToken.AccountId);
+
+                        if (!imageSaved)
+                        {
+                            return BadRequest();
                         }
                         return Ok();
-                        
-                    }return Unauthorized();
+                    }
+                    return Unauthorized();
                 }
                 else return Unauthorized();
             }
             else return Unauthorized();
         }
-           
-        
+
+
     }
 
 }

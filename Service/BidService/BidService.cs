@@ -16,7 +16,7 @@ namespace Service.BidService
 
         Task<Bid> GetAsync(string auctionId);
         Task<List<Bid>> GetAllAsync();  
-        Task<List<Bid>> GetAllAsyncById(string accountId);
+        Task<List<string>> GetAllAsyncById(string accountId);
     }
     public class BidService : IBidService
     {
@@ -74,14 +74,15 @@ namespace Service.BidService
             }
         }
 
-        public async Task<List<Bid>> GetAllAsyncById(string accountId)
+        public async Task<List<string>> GetAllAsyncById(string accountId)
         {
             try
             {
-                var isExistBid = await _uow.Bid.GetAllAsync(b => b.Bidder == accountId);
-                if(isExistBid != null)
+                var isExistBid = (await _uow.Bid.GetAllAsync(b => b.Bidder == accountId)).Select(b => b.AuctionId).Distinct().ToList();
+                if (isExistBid != null)
                 {
-                    return isExistBid.ToList();
+
+                    return isExistBid;
                 }
                 else
                 {

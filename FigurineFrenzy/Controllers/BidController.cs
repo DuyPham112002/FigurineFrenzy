@@ -45,13 +45,13 @@ namespace FigurineFrenzy.Controllers
                     var checkToken = await _token.CheckTokenAsync(token);
                     if (checkToken != null && checkToken.Role == "User")
                     {
-                        List<Bid> bids = await _bid.GetAllAsyncById(checkToken.AccountId);
+                        List<string> bids = await _bid.GetAllAsyncById(checkToken.AccountId);
                         //loop to add user have already join Auction to group
                         foreach (var bid in bids)
                         {
                             //You can add the user to the group directly here if needed
-                            await _auctionHub.Groups.AddToGroupAsync(bid.AuctionId, $"auction_{bid.AuctionId}");
-                           
+                            await _auctionHub.Groups.AddToGroupAsync(bid, $"auction_{bid}");
+
                         }
                         return Ok(bids);
 
@@ -79,8 +79,9 @@ namespace FigurineFrenzy.Controllers
                     {
                         var auction = await _auction.GetAsync(createBidView.AuctionId);
                         var user = await _user.GetAsync(checkToken.AccountId);
-                     
-                        if (auction != null && auction.EndTime >= DateTime.Now && ValidBid(createBidView.BidAmount,auction.StepPrice,auction.CurrentPrice,auction.StepPrice))
+                        if (!ValidBid(createBidView.BidAmount, auction.StepPrice, auction.CurrentPrice, auction.StepPrice))
+                            return StatusCode(500, $"Invalid Amount Because Steprice is {auction.StepPrice}");
+                        if (auction != null && auction.EndTime >= DateTime.Now && auction.StartTime <= DateTime.Now )
                         {
 
                             var createBid = await _bid.CreateAsync(createBidView, checkToken.AccountId);
@@ -93,12 +94,11 @@ namespace FigurineFrenzy.Controllers
                                     {
                                         AuctionId = createBidView.AuctionId,
                                         BidAmount = createBidView.BidAmount,
-                                        Bidder = user.FullName
                                     });
-                                    await _auctionHub.Clients.Group($"auction_{createBidView.AuctionId}")
-                                        .SendAsync("UserJoinedAuction", user.FullName);
-                                    //You can add the user to the group directly here if needed
-                                    await _auctionHub.Groups.AddToGroupAsync(createBidView.AuctionId, $"auction_{createBidView.AuctionId}");
+                                    var groupName = $"auction_{createBidView.AuctionId}";
+                                    await _auctionHub.Clients.Groups(groupName).SendAsync("ReceiveAuctionBidDetail", createBidView.AuctionId, user.FullName);
+
+                             
                                     return Ok(createBidView.BidAmount);
 
                                 }
@@ -107,7 +107,7 @@ namespace FigurineFrenzy.Controllers
                             }
                             else return StatusCode(500, "Can't create Bid");
                         }
-                        else return BadRequest("Invalid Bid Amount or Auction is Expired");
+                        else return BadRequest("Invalid Bid Amount or Auction is Expired or Auction Not Start Yet");
 
                     }
                     else return Unauthorized();
@@ -117,9 +117,9 @@ namespace FigurineFrenzy.Controllers
             else return Unauthorized();
         }
 
-        private bool ValidBid(double bidAmount,double? stepPrice,double? currentPrice, double? StartPrice)
+        private bool ValidBid(double bidAmount, double? stepPrice, double? currentPrice, double? StartPrice)
         {
-            if(currentPrice == null)
+            if (currentPrice == null)
             {
                 if (bidAmount > StartPrice && bidAmount - StartPrice >= stepPrice)
                 {
@@ -127,9 +127,10 @@ namespace FigurineFrenzy.Controllers
                 }
                 else
                 {
-                    return true;
+                    return false;
                 }
-            }else if (currentPrice != null)
+            }
+            else if (currentPrice != null)
             {
                 if (bidAmount > currentPrice && bidAmount - currentPrice >= stepPrice)
                 {
@@ -145,6 +146,49 @@ namespace FigurineFrenzy.Controllers
                 return false;
             }
 
+        }
+        [Authorize(Roles = "User")]
+        [HttpGet("JoinToAuction")]
+        public async Task<IActionResult> ActionResult()
+        {
+            string header = Request.Headers["Authorization"].ToString();
+            if (header != null && header.Length > 0)
+            {
+                string token = header.Split(" ")[1];
+                if (token != null)
+                {
+                    var checkToken = await _token.CheckTokenAsync(token);
+                    if (checkToken != null && checkToken.Role == "User")
+                    {
+                        var isJoined = await _bid.GetAllAsyncById(checkToken.AccountId);
+                        var auction = await _auction.AuctionStatusCheckAsync(isJoined);
+                        var userName = await _user.GetAsync(checkToken.AccountId);
+                        if (isJoined != null && isJoined.Count() > 0)
+                        {
+                            foreach (var item in auction)
+                            {
+                                await _auctionHub.Clients.Groups($"auction_{item.AuctionId}").SendAsync("ReceiveAuctionBidDetail", item.AuctionId, userName.FullName);
+                                var bidInfo = new BidInformationViewModel
+                                {
+                                    AuctionId = item.AuctionId,
+                                    Amount = item.CurrentPrice,
+                                    FullName = userName.FullName,
+
+                                };
+                                return Ok(bidInfo);  
+                            }
+                            return Ok("You have not joined any auction yet");
+                        }
+                        else
+                        {
+                            return BadRequest("You have not joined this auction");
+                        }
+                    }
+                    else return Unauthorized();
+                }
+                else return Unauthorized();
+            }
+            else return Unauthorized();
         }
     }
 }

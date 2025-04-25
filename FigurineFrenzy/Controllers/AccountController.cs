@@ -60,14 +60,16 @@ namespace FigurineFrenzy.Controllers
                         return Ok();
                     }
                     else return Unauthorized();
-                }return Unauthorized();
-            }return Unauthorized();
+                }
+                return Unauthorized();
+            }
+            return Unauthorized();
         }
 
         [Authorize(Roles = "User")]
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()
-         {
+        {
             string header = Request.Headers["Authorization"].ToString();
             if (header != null && header.Length > 0)
             {
@@ -187,11 +189,11 @@ namespace FigurineFrenzy.Controllers
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotpasswordViewModel forgotpassword)
         {
             var isExist = await _user.GetValidEmailAsync(forgotpassword.Email);
-            if(isExist == null) return NotFound("Email not found");
+            if (isExist == null) return NotFound("Email not found");
 
             var token = _token.GenerateResetToken(isExist.Email);
 
-            var resetUrl = $"http://127.0.0.1:5500/verify.html?token={token}"; 
+            var resetUrl = $"http://127.0.0.1:5500/verify.html?token={token}";
             await _email.SendResetPasswordEmail(forgotpassword.Email, resetUrl);
 
             return Ok("Reset password link has been sent to your email");
@@ -205,13 +207,13 @@ namespace FigurineFrenzy.Controllers
         public async Task<IActionResult> ResetPassword(ResetPasswordViewoModel request)
         {
             var isExistEmail = await _token.CheckResetTokenAsync(request.token);
-            if(isExistEmail == null) return BadRequest("Token is invalid or expired");  
+            if (isExistEmail == null) return BadRequest("Token is invalid or expired");
 
             var user = await _user.GetValidEmailAsync(isExistEmail.Email);
-            if(user == null) return NotFound("User not found");
+            if (user == null) return NotFound("User not found");
 
             var resetpassword = await _account.RessetPasswordAsync(user.AccountId, _hash.SHA256(request.NewPassword + privateKey));
-            if(resetpassword)
+            if (resetpassword)
             {
                 return Ok("Password reset successfully");
             }
